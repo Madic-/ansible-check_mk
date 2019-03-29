@@ -1,5 +1,11 @@
 ---
 
+- name: Starting Apache2
+  systemd:
+    name: apache2
+    state: started
+    enabled: true
+
 - name: Restarting check_mk
   command: omd restart {{ cmk_site_name }}
 
@@ -7,3 +13,4 @@
   systemd:
     name: thruk
     state: restarted
+    enabled: true

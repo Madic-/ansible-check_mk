@@ -17,6 +17,9 @@
 - name: Including thruk installation tasks
   include_tasks: install_thruk.yml
 
+- name: Flush handlers
+  meta: flush_handlers
+
 - name: Informational Output
   debug:
     msg:

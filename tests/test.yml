@@ -1,0 +1,24 @@
+---
+
+- hosts: localhost
+
+  tasks:
+    - name: Check if apache2 is enabled
+      command: systemctl is-enabled apache2
+      register: command_result
+      failed_when: "'disabled' in command_result.stdout"
+
+    - name: Check if thruk is enabled
+      command: systemctl is-enabled thruk
+      register: command_result
+      failed_when: "'disabled' in command_result.stdout"
+
+    - name: Check if apache2 is running
+      shell: "systemctl status apache2 | grep -i running"
+      register: status
+      failed_when: status.rc != 0
+
+    - name: Check if thruk is running
+      shell: "/etc/init.d/thruk status | grep -i running"
+      register: status
+      failed_when: status.rc != 0

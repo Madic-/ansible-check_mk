@@ -1,6 +1,6 @@
 ---
 
-- name: Adding  consol labs stable repo
+- name: Adding consol labs stable repo
   apt_repository:
     filename: labs_consol_stable
     repo: "deb http://labs.consol.de/repo/stable/debian {{ ansible_distribution_release }} main"
@@ -11,3 +11,5 @@
   apt:
     deb: "https://mathias-kettner.de/support/{{ cmk_version }}/check-mk-raw-{{ cmk_version }}_0.stretch_amd64.deb"
     state: present
+  notify:
+    - Starting Apache2

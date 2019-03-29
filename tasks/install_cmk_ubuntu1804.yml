@@ -11,3 +11,5 @@
   apt:
     deb: "https://mathias-kettner.de/support/{{ cmk_version }}/check-mk-raw-{{ cmk_version }}_0.bionic_amd64.deb"
     state: present
+  notify:
+    - Starting Apache2

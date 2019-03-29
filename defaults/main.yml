@@ -10,8 +10,9 @@ cmk_basic_requirements:
   - git
   - python-netsnmp
   - mailutils
-  - snmp-mibs-downloader
   - python-passlib
+  - dirmngr
+  - xz-utils
 # Configure first default user. htpasswd format. Default: omdadmin:omd
 #cmk_default_user: omdadmin:$apr1$.kgpJT3x$ImiCZPLlcx.PKLrE37Lyc.
 cmk_default_user: cmkadmin

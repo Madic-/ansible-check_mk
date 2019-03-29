@@ -1,6 +1,6 @@
 ---
 
-- name: Installing thruk
+- name: Installing Thruk
   apt:
     name: thruk
     state: present
@@ -13,7 +13,8 @@
     owner: www-data
     group: www-data
   notify:
-  - Restarting Thruk
+    - Starting Apache2
+    - Restarting Thruk
 
 - name: Setting permissions for thruk configuration files
   file:

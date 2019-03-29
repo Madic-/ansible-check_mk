@@ -1,12 +1,18 @@
 ---
 
-- name: Adding apt key for consol labs repo
-  apt_key:
-    id: F8C1CA08A57B9ED7
-    keyserver: hkps://keys.gnupg.net
-
 - name: Installing requirements
   apt:
     name: "{{ cmk_basic_requirements }}"
     state: present
     update_cache: yes
+
+- name: Adding apt key for consol labs repo
+  apt_key:
+    id: F8C1CA08A57B9ED7
+    keyserver: hkps://keys.gnupg.net
+
+- name: Making sure the man8 folder exists
+  file:
+    path: /usr/share/man/man8
+    state: directory
+    mode: 0755

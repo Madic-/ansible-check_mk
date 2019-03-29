@@ -52,7 +52,7 @@
   with_items: "{{ cmk_site_config }}"
   #register: cmkdistro_config1
   notify:
-  - Restarting check_mk
+    - Restarting check_mk
 
 - name: Getting check_mk configuration details
   omdistro_facts:
@@ -64,4 +64,4 @@
   with_items: "{{ cmk_site_config }}"
   #register: cmkdistro_config2
   notify:
-  - Restarting check_mk
+    - Restarting check_mk

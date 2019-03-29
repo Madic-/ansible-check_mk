@@ -1,10 +1,10 @@
 # Ansible Check_MK
 
-[![Maintenance](https://img.shields.io/maintenance/yes/2019.svg)](https://github.com/Madic-/matrix-synapse-auto-deploy)
+[![Maintenance](https://img.shields.io/maintenance/yes/2019.svg)](https://github.com/Madic-/ansible-check_mk)
 
-The intention of this ansible role is to replicate some of the functionality from the [OMD](https://labs.consol.de/de/omd/) v2.X packages with focus on Check_MK. OMD hasn't updated Check_MK in years and finally removed it from version 3. So this role is going to install the following tools and pre-configure them.
+The intention of this ansible role is to replicate some of the functionality from the [OMD](https://labs.consol.de/de/omd/) v2.X packages with focus on Check_MK RAW. OMD hasn't updated Check_MK in years and finally removed it from version 3. So this role is going to install the following tools and pre-configure them:
 
-* [x] [Check_MK](https://mathias-kettner.de/)
+* [x] [Check_MK RAW](https://mathias-kettner.de/)
   * [ ] Check_MK Master / Slave Configuration
 * [x] [Thruk](https://www.thruk.org)
   * [ ] Using Check_MK Users
@@ -12,6 +12,13 @@ The intention of this ansible role is to replicate some of the functionality fro
   * [ ] [Histou](https://github.com/Griesbacher/histou)
 * [ ] [InfluxDB](https://www.influxdata.com/)
 * [ ] [Nagflux](https://github.com/Griesbacher/nagflux)
+
+I assume you have a process in place to configure apache2 with a valid TLS configuration because by default all WebUIs are only accessible via http. A valid TLS configuration is out of scope of this role.
+
+## Supported Operating Systems
+
+* Ubuntu 18.04
+* Debian 9
 
 ## Configuration Files
 

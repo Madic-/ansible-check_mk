@@ -1,0 +1,14 @@
+---
+
+env:
+  - DISTRO: ubuntu1804
+  - DISTRO: debian9
+
+services:
+  - docker
+
+script:
+  - ${PWD}/tests/test.sh
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/
