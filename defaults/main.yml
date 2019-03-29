@@ -1,0 +1,37 @@
+---
+
+cmk_version: 1.5.0p13
+cmk_site_name: cmk
+cmk_basic_requirements:
+  - freeipmi
+  - telnet
+  - libipc-run-perl
+  - mtr
+  - git
+  - python-netsnmp
+  - mailutils
+  - snmp-mibs-downloader
+  - python-passlib
+# Configure first default user. htpasswd format. Default: omdadmin:omd
+#cmk_default_user: omdadmin:$apr1$.kgpJT3x$ImiCZPLlcx.PKLrE37Lyc.
+cmk_default_user: cmkadmin
+cmk_default_password: cmk
+cmk_site_config:
+  - { name: ADMIN_MAIL,               value: "cmk@example.com" }
+  - { name: AUTOSTART,                value: "on" }
+  - { name: CORE,                     value: "icinga" }
+  - { name: TMPFS,                    value: "on" }
+  - { name: APACHE_MODE,              value: "own" }
+  - { name: APACHE_TCP_ADDR,          value: "127.0.0.1" }
+  - { name: MULTISITE_AUTHORISATION,  value: "on" }
+  - { name: MULTISITE_COOKIE_AUTH,    value: "on" }
+  - { name: NAGIOS_THEME,             value: "exfoliation" }
+  - { name: MKEVENTD,                 value: "on" }
+  - { name: MKEVENTD_SNMPTRAP,        value: "on" }
+  - { name: MKEVENTD_SYSLOG,          value: "on" }
+  - { name: MKEVENTD_SYSLOG_TCP,      value: "on" }
+  - { name: PNP4NAGIOS,               value: "on" }
+  - { name: LIVESTATUS_TCP,           value: "on" }
+  - { name: LIVESTATUS_TCP_ONLY_FROM, value: "0.0.0.0" }
+  - { name: LIVESTATUS_TCP_PORT,      value: "6557" }
+  - { name: NSCA,                     value: "off" }

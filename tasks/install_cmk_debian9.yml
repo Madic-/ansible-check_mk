@@ -1,0 +1,13 @@
+---
+
+- name: Adding  consol labs stable repo
+  apt_repository:
+    filename: labs_consol_stable
+    repo: "deb http://labs.consol.de/repo/stable/debian {{ ansible_distribution_release }} main"
+    update_cache: no
+    state: present
+
+- name: Installing Check_MK
+  apt:
+    deb: "https://mathias-kettner.de/support/{{ cmk_version }}/check-mk-raw-{{ cmk_version }}_0.stretch_amd64.deb"
+    state: present

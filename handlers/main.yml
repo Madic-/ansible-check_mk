@@ -1,0 +1,9 @@
+---
+
+- name: Restarting check_mk
+  command: omd restart {{ cmk_site_name }}
+
+- name: Restarting Thruk
+  systemd:
+    name: thruk
+    state: restarted

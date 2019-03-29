@@ -1,0 +1,31 @@
+---
+
+- name: Installing thruk
+  apt:
+    name: thruk
+    state: present
+    update_cache: yes
+
+- name: Pre-configuring thruk
+  template:
+    src: ansible_thruk.conf.j2
+    dest: /etc/thruk/thruk_local.d/ansible_thruk.conf
+    owner: www-data
+    group: www-data
+  notify:
+  - Restarting Thruk
+
+- name: Setting permissions for thruk configuration files
+  file:
+    path: /etc/thruk/cgi.cfg
+    owner: www-data
+    group: www-data
+
+#- name: Use Check_MKs Users in Thruk
+#  lineinfile:
+#    dest: /etc/thruk/thruk.conf
+#    regexp: "(.*)htpasswd ="
+#    line: "    htpasswd = /opt/omd/sites/{{ cmk_site_name }}/etc/htpasswd"
+#    state: present
+#  notify:
+#  - Restarting Thruk

@@ -1,0 +1,67 @@
+---
+
+- name: Getting installed check_mk sites
+  command: "omd sites -b"
+  register: cmk_sites
+  changed_when: false
+
+- name: Creating check_mk site {{ cmk_site_name }}
+  command: "omd create {{ cmk_site_name }}"
+  when: cmk_site_name not in cmk_sites.stdout_lines
+  register: cmkdistro_created
+
+#- name: Setting default user for {{ cmk_site_name }}
+#  lineinfile:
+#    path: /opt/omd/sites/{{ cmk_site_name }}/etc/htpasswd
+#    regexp: '^omdadmin'
+#    line: "{{ cmk_default_user }}"
+#  when: cmkdistro_created.changed
+
+- name: Setting default user for site {{ cmk_site_name }}
+  htpasswd:
+    path: /opt/omd/sites/{{ cmk_site_name }}/etc/htpasswd
+    name: "{{ cmk_default_user }}"
+    password: "{{ cmk_default_password }}"
+
+- name: Creating required directories for user {{ cmk_site_name }}
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ cmk_site_name }}"
+    group: "{{ cmk_site_name }}"
+    mode: 0775
+  with_items:
+    - /opt/omd/sites/{{ cmk_site_name }}/.ssh
+    - /opt/omd/sites/{{ cmk_site_name }}/etc/ipmi-config
+
+- name: Fixing folder permissions
+  file:
+    dest: /opt/omd/sites/{{ cmk_site_name }}/local/lib/nagios/plugins
+    owner: "{{ cmk_site_name }}"
+    group: "{{ cmk_site_name }}"
+    mode: "u=rwX,g=rX,o=rX"
+    recurse: yes
+
+- name: Getting check_mk configuration details
+  omdistro_facts:
+    name: "{{ cmk_site_name }}"
+
+- name: Configuring check_mk part 1
+  command: omd config {{ cmk_site_name }} set {{ item.name }} {{ item.value }}
+  when: omdistro_site_facts[item.name] is defined and omdistro_site_facts[item.name] != item.value
+  with_items: "{{ cmk_site_config }}"
+  #register: cmkdistro_config1
+  notify:
+  - Restarting check_mk
+
+- name: Getting check_mk configuration details
+  omdistro_facts:
+    name: "{{ cmk_site_name }}"
+
+- name: Configuring check_mk part 2
+  command: omd config {{ cmk_site_name }} set {{ item.name }} {{ item.value }}
+  when: omdistro_site_facts[item.name] is defined and omdistro_site_facts[item.name] != item.value
+  with_items: "{{ cmk_site_config }}"
+  #register: cmkdistro_config2
+  notify:
+  - Restarting check_mk

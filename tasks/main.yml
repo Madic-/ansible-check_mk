@@ -1,0 +1,27 @@
+---
+
+- name: Including basic setup tasks
+  include_tasks: install_basic.yml
+
+- name: Including Ubuntu 18.04 tasks
+  include_tasks: install_cmk_ubuntu1804.yml
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '18.04'
+
+- name: Including Debian 9 tasks
+  include_tasks: install_cmk_debian9.yml
+  when: ansible_distribution == 'Debian' and ansible_distribution_major_version == '9'
+
+- name: Including check_mk configuration tasks
+  include_tasks: configure_cmk.yml
+
+- name: Including thruk installation tasks
+  include_tasks: install_thruk.yml
+
+- name: Informational Output
+  debug:
+    msg:
+      - ""
+      - "Check_MK URL: http://{{ inventory_hostname }}/{{ cmk_site_name }}/check_mk"
+      - "Thruk URL: http://{{ inventory_hostname }}/thruk"
+      - "Default user: {{ cmk_default_user }}"
+      - "Default password: {{ cmk_default_password }}"
