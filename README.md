@@ -2,6 +2,8 @@
 
 [![Maintenance](https://img.shields.io/maintenance/yes/2019.svg)](https://github.com/Madic-/ansible-check_mk)
 
+[![Build Status](https://travis-ci.org/Madic-/ansible-check_mk.svg?branch=master)](https://travis-ci.org/Madic-/ansible-check_mk)
+
 The intention of this ansible role is to replicate some of the functionality from the [OMD](https://labs.consol.de/de/omd/) v2.X packages with focus on Check_MK RAW. OMD hasn't updated Check_MK in years and finally removed it from version 3. So this role is going to install the following tools and pre-configure them:
 
 * [x] [Check_MK RAW](https://mathias-kettner.de/)
@@ -10,6 +12,7 @@ The intention of this ansible role is to replicate some of the functionality fro
   * [ ] Using Check_MK Users
 * [ ] [Grafana](https://grafana.com/)
   * [ ] [Histou](https://github.com/Griesbacher/histou)
+  * [ ] Dual Graphing pnp4nagios and InfluxDB/Grafana
 * [ ] [InfluxDB](https://www.influxdata.com/)
 * [ ] [Nagflux](https://github.com/Griesbacher/nagflux)
 
