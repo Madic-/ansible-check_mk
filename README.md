@@ -7,7 +7,8 @@ The intention of this ansible role is to replicate some of the functionality fro
 * [x] [Check_MK RAW](https://mathias-kettner.de/)
   * [ ] Check_MK Master / Slave Configuration
 * [x] [Thruk](https://www.thruk.org)
-  * [ ] Using Check_MK Users
+  * [x] Using Check_MK Users
+  * [x] Pre-configuring Check_MK Site in Thruk
 * [ ] [Grafana](https://grafana.com/)
   * [ ] [Histou](https://github.com/Griesbacher/histou)
   * [ ] Dual Graphing pnp4nagios and InfluxDB/Grafana

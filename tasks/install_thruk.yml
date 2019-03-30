@@ -8,25 +8,28 @@
 
 - name: Pre-configuring thruk
   template:
-    src: ansible_thruk.conf.j2
-    dest: /etc/thruk/thruk_local.d/ansible_thruk.conf
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
     owner: www-data
     group: www-data
+  with_items:
+    - { src: thruk_config.conf.j2, dest: /etc/thruk/thruk_local.d/thruk_ansible.conf }
+    - { src: thruk_menu.conf.j2, dest: /etc/thruk/menu_local.conf }
   notify:
     - Starting Apache2
     - Restarting Thruk
 
-- name: Setting permissions for thruk configuration files
+- name: Symlink Check_MKs htpasswd with Thruks htpasswd
+  file:
+    src: /opt/omd/sites/{{ cmk_site_name }}/etc/htpasswd
+    dest: /etc/thruk/htpasswd
+    force: yes
+    owner: www-data
+    group: www-data
+    state: link
+
+- name: Setting permissions for Thruk configuration files
   file:
     path: /etc/thruk/cgi.cfg
     owner: www-data
     group: www-data
-
-#- name: Use Check_MKs Users in Thruk
-#  lineinfile:
-#    dest: /etc/thruk/thruk.conf
-#    regexp: "(.*)htpasswd ="
-#    line: "    htpasswd = /opt/omd/sites/{{ cmk_site_name }}/etc/htpasswd"
-#    state: present
-#  notify:
-#  - Restarting Thruk
