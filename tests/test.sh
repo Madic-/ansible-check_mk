@@ -31,7 +31,7 @@ docker exec --tty "$CID" env TERM=xterm env ansible --version
 
 docker exec --tty "$CID" env TERM=xterm env ansible all -i "localhost," -c local -m setup
 
-docker exec --tty "$CID" env TERM=xterm env ansible-playbook /etc/ansible/roles/role_under_test/tests/playbook.yml --syntax-check 
+docker exec --tty "$CID" env TERM=xterm env ansible-playbook /etc/ansible/roles/role_under_test/tests/playbook.yml --syntax-check
 
 docker exec --tty "$CID" env TERM=xterm env ansible-playbook /etc/ansible/roles/role_under_test/tests/playbook.yml
 

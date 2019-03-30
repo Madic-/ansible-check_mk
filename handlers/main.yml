@@ -6,7 +6,7 @@
     state: started
     enabled: true
 
-- name: Restarting check_mk
+- name: Restarting Check_MK
   command: omd restart {{ cmk_site_name }}
 
 - name: Restarting Thruk

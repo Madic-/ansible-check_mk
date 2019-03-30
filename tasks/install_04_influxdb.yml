@@ -1,0 +1,6 @@
+---
+
+- name: Adding apt key for influxdb repo
+  apt_key:
+    id: F8C1CA08A57B9ED7
+    keyserver: hkps://keys.gnupg.net

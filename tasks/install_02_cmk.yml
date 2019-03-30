@@ -1,5 +1,19 @@
 ---
 
+- name: Adding consol labs stable repo
+  apt_repository:
+    filename: labs_consol_stable
+    repo: "deb http://labs.consol.de/repo/stable/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} main"
+    update_cache: no
+    state: present
+
+- name: Installing Check_MK
+  apt:
+    deb: "https://mathias-kettner.de/support/{{ cmk_version }}/check-mk-raw-{{ cmk_version }}_0.{{ ansible_distribution_release }}_amd64.deb"
+    state: present
+  notify:
+    - Starting Apache2
+
 - name: Getting installed check_mk sites
   command: "omd sites -b"
   register: cmk_sites
@@ -9,13 +23,6 @@
   command: "omd create {{ cmk_site_name }}"
   when: cmk_site_name not in cmk_sites.stdout_lines
   register: cmkdistro_created
-
-#- name: Setting default user for {{ cmk_site_name }}
-#  lineinfile:
-#    path: /opt/omd/sites/{{ cmk_site_name }}/etc/htpasswd
-#    regexp: '^omdadmin'
-#    line: "{{ cmk_default_user }}"
-#  when: cmkdistro_created.changed
 
 - name: Setting default user for site {{ cmk_site_name }}
   htpasswd:

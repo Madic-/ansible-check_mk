@@ -1,25 +1,15 @@
 ---
 
 - name: Including basic setup tasks
-  import_tasks: install_basic.yml
+  import_tasks: install_01_basic.yml
   tags: check_mk, thruk
 
-- name: Including Ubuntu 18.04 tasks
-  import_tasks: install_cmk_ubuntu1804.yml
-  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '18.04'
-  tags: check_mk
-
-- name: Including Debian 9 tasks
-  import_tasks: install_cmk_debian9.yml
-  when: ansible_distribution == 'Debian' and ansible_distribution_major_version == '9'
-  tags: check_mk
-
-- name: Including Check_MK configuration tasks
-  import_tasks: configure_cmk.yml
+- name: Including Check_MK tasks
+  import_tasks: install_02_cmk.yml
   tags: check_mk
 
 - name: Including Thruk installation tasks
-  import_tasks: install_thruk.yml
+  import_tasks: install_03_thruk.yml
   tags: thruk
 
 - name: Flush handlers
