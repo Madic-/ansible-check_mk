@@ -1,9 +1,10 @@
 # {{ ansible_managed }}
 
+resource_file = /omd/sites/{{ cmk_site_name }}/etc/{{ cmk_monitoring_core }}/resource.cfg
+
 <Component Thruk::Backend>
     <peer>
         name    = {{ cmk_site_name }}
-        id      = 71d81
         type    = livestatus
         <options>
             #peer = /opt/omd/sites/{{ cmk_site_name }}/tmp/run/live

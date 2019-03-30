@@ -15,10 +15,12 @@ cmk_basic_requirements:
   - xz-utils
 cmk_default_user: cmkadmin
 cmk_default_password: cmk
+# Allowed values: nagios, icinga
+cmk_monitoring_core: icinga
 cmk_site_config:
   - { name: ADMIN_MAIL,               value: "cmk@example.com" }
   - { name: AUTOSTART,                value: "on" }
-  - { name: CORE,                     value: "icinga" }
+  - { name: CORE,                     value: "{{ cmk_monitoring_core }}" }
   - { name: TMPFS,                    value: "on" }
   - { name: APACHE_MODE,              value: "own" }
   - { name: APACHE_TCP_ADDR,          value: "127.0.0.1" }

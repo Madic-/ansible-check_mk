@@ -28,6 +28,12 @@
     group: www-data
     state: link
 
+- name: Give user {{ cmk_default_user }} authorized_for_admin permissions
+  replace:
+    path: /etc/thruk/cgi.cfg
+    regexp: 'thrukadmin'
+    replace: '{{ cmk_default_user }}'
+
 - name: Setting permissions for Thruk configuration files
   file:
     path: /etc/thruk/cgi.cfg
