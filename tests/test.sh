@@ -12,8 +12,6 @@ CID=$(date +%s)
 CLEANUP=${CLEANUP:-"true"}
 ANSIBLE_CONFIG=/etc/ansible/roles/role_under_test/tests/ansible.cfg
 
-echo -e "\n$PDIR\n"
-
 if [ "$DISTRO" = 'ubuntu1804' ]; then
   init="/lib/systemd/systemd"
   opts="--privileged --volume=/var/lib/docker --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
@@ -25,14 +23,18 @@ fi
 docker pull geerlingguy/docker-${DISTRO}-ansible:latest
 
 docker run --detach --volume="$PDIR":/etc/ansible/roles/role_under_test:ro --name $CID $opts geerlingguy/docker-${DISTRO}-ansible:latest $init
-                             /home/mne-adm/Git/ansible-check_mk
+
 docker inspect "$CID"
 
 docker exec --tty "$CID" env TERM=xterm env ansible --version
 
 docker exec --tty "$CID" env TERM=xterm env ansible all -i "localhost," -c local -m setup
 
-docker exec --tty "$CID" env TERM=xterm ls -la /etc/ansible/roles/role_under_test/tests
+docker exec --tty "$CID" env TERM=xterm apt-get update
+
+docker exec --tty "$CID" env TERM=xterm apt-get -y install tree
+
+docker exec --tty "$CID" env TERM=xterm tree /etc/ansible
 
 docker exec --tty "$CID" env TERM=xterm env ansible-playbook /etc/ansible/roles/role_under_test/tests/playbook.yml --syntax-check 
 
