@@ -27,8 +27,6 @@ This role should be idempotent, like any other ansible role. Because of this I t
 
 ### Thruk
 
-```
-/etc/thruk/thruk_local.d/
-```
+    /etc/thruk/thruk_local.d/
 
 Configurations located beneath this folder will not be shown in the Thruk WebUI, e.g. the backend configuration. But the other configuration files will get overwritten when changing settings through the Thruk WebUI.
