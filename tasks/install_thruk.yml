@@ -19,7 +19,12 @@
     - Starting Apache2
     - Restarting Thruk
 
-- name: Symlink Check_MKs htpasswd with Thruks htpasswd
+- name: Checking Thruks htpasswd file
+  stat:
+    path: /etc/thruk/htpasswd
+  register: thrukpasswd
+
+- name: Symlinking Check_MKs htpasswd with Thruks htpasswd
   file:
     src: /opt/omd/sites/{{ cmk_site_name }}/etc/htpasswd
     dest: /etc/thruk/htpasswd
@@ -27,6 +32,7 @@
     owner: www-data
     group: www-data
     state: link
+  when: "thrukpasswd.stat.islnk == False"
 
 - name: Give user {{ cmk_default_user }} authorized_for_admin permissions
   replace:
