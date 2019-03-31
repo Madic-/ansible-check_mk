@@ -29,8 +29,6 @@
     src: /opt/omd/sites/{{ cmk_site_name }}/etc/htpasswd
     dest: /etc/thruk/htpasswd
     force: yes
-    owner: www-data
-    group: www-data
     state: link
   when: "thrukpasswd.stat.islnk == False"
 

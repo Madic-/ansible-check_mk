@@ -23,6 +23,11 @@
       register: command_result
       failed_when: "'disabled' in command_result.stdout"
 
+    - name: Check if nagflux is enabled
+      command: systemctl is-enabled nagflux
+      register: command_result
+      failed_when: "'disabled' in command_result.stdout"
+
     - name: Check if apache2 is running
       shell: "systemctl status apache2 | grep -i running"
       register: status
@@ -40,5 +45,10 @@
 
     - name: Check if grafana is running
       shell: "systemctl status grafana-server | grep -i running"
+      register: status
+      failed_when: status.rc != 0
+
+    - name: Check if nagflux is running
+      shell: "systemctl status nagflux | grep -i running"
       register: status
       failed_when: status.rc != 0

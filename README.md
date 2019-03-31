@@ -7,6 +7,7 @@ The intention of this ansible role is to replicate some of the functionality fro
 * [x] [Check_MK RAW Edition](https://mathias-kettner.de)
   * [ ] Check_MK Master / Slave Configuration
   * [ ] Dual Graphing pnp4nagios and InfluxDB/Grafana
+* [ ] [Mod-Gearman](https://mod-gearman.org/)
 * [x] [Thruk](https://www.thruk.org)
   * [x] Using Check_MK Users
   * [x] Pre-configuring Check_MK Site in Thruk
@@ -15,7 +16,7 @@ The intention of this ansible role is to replicate some of the functionality fro
   * [x] Adding InfluxDB Nagflux datasource
 * [x] [InfluxDB](https://www.influxdata.com)
   * [x] Pre-configuring Nagflux database
-* [ ] [Nagflux](https://github.com/Griesbacher/nagflux)
+* [x] [Nagflux](https://github.com/Griesbacher/nagflux)
 
 I assume you have a process in place to configure apache2 with a valid TLS configuration because by default all WebUIs are only accessible via http. A valid TLS configuration is out of scope of this role.
 

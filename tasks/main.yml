@@ -24,6 +24,10 @@
   import_tasks: install_06_histou.yml
   tags: histou
 
+- name: Including Nagflux installation tasks
+  import_tasks: install_07_nagflux.yml
+  tags: nagflux
+
 - name: Flush handlers
   meta: flush_handlers
   tags: check_mk, thruk, grafana

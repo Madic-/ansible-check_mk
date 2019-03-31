@@ -1,0 +1,15 @@
+# {{ ansible_managed }}
+[Unit]
+Description=A connector which transforms performancedata from Nagios/Icinga(2)/Naemon to InfluxDB/Elasticsearch
+Documentation=https://github.com/Griesbacher/nagflux
+After=network-online.target
+
+[Service]
+User={{ cmk_site_name }}
+Group={{ cmk_site_name }}
+ExecStart=/usr/local/sbin/nagflux -configPath /etc/nagflux/config.gcfg
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+Alias=nagflux.service

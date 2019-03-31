@@ -15,6 +15,12 @@
     state: restarted
     enabled: true
 
+- name: Restarting Nagflux
+  systemd:
+    name: nagflux
+    state: restarted
+    enabled: true
+
 - name: Restarting Thruk
   systemd:
     name: thruk

@@ -16,7 +16,6 @@
   apt:
     name:
       - influxdb
-      - influxdb-client
     state: present
   register: influxdb_installed
 

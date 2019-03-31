@@ -56,4 +56,9 @@ cmk_influxdb_nagflux_password: nagflux
 cmk_grafana_datasource_name: influxdb-nagflux-{{ cmk_influxdb_nagflux_name }}
 
 # Histou
+# https://github.com/Griesbacher/histou/releases
 cmk_histou_version: 0.4.3
+
+# Nagflux
+# https://github.com/Griesbacher/nagflux/releases
+cmk_nagflux_version: 0.4.1

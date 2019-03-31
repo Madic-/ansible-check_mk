@@ -1,0 +1,47 @@
+# {{ ansible_managed }}
+[main]
+    NagiosSpoolfileFolder = "/opt/omd/sites/{{ cmk_site_name }}/var/pnp4nagios/spool"
+    NagiosSpoolfileWorker = 1
+    InfluxWorker = 2
+    MaxInfluxWorker = 5
+    DumpFile = "/opt/omd/sites/{{ cmk_site_name }}/var/log/nagflux/nagflux.dump"
+    NagfluxSpoolfileFolder = "/opt/omd/sites/{{ cmk_site_name }}/var/nagflux"
+    FieldSeparator = "&"
+    BufferSize = 10000
+    FileBufferSize = 65536
+    DefaultTarget = "all"
+
+[ModGearman "{{ cmk_site_name }}"]
+        Enabled = true
+        Address = "127.0.0.1:4730"
+        Queue = "grafana_data"
+        Secret = ""
+        SecretFile = "/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/secret.key"
+        Worker = 1
+
+[Log]
+    LogFile = ""
+    MinSeverity = "INFO"
+
+[InfluxDBGlobal]
+    CreateDatabaseIfNotExists = true
+    NastyString = ""
+    NastyStringToReplace = ""
+    HostcheckAlias = "hostcheck"
+
+[InfluxDB "{{ cmk_influxdb_nagflux_name }}"]
+    Enabled = true
+    Version = 1.0
+    Address = "http://127.0.0.1:8086"
+    Arguments = "precision=ms&u={{ cmk_influxdb_nagflux_user }}&p={{ cmk_influxdb_nagflux_password }}&db={{ cmk_influxdb_nagflux_name }}"
+    StopPullingDataIfDown = true
+
+[Livestatus]
+	#tcp or file
+	Type = "file"
+	#tcp: 127.0.0.1:6557 or file /var/run/live
+	Address = "/opt/omd/sites/{{ cmk_site_name }}/tmp/run/live"
+	# The amount to minutes to wait for livestatus to come up, if set to 0 the detection is disabled
+	MinutesToWait = 3
+	# Set the Version of Livestatus. Allowed are Nagios, Icinga2, Naemon. If left empty Nagflux will try to detect it on it's own
+	Version = ""
