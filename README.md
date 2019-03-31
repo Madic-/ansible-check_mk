@@ -54,7 +54,7 @@ By default no user, except for the user created through this role, has permissio
 
 ## Tests
 
-It's possible to test the role against a docker container. You can run a provided test script from the root of the role. By providing environment variables you can slightly modify the behaviour.
+It's possible to test the role against a docker container. The provided test script must be run from the root of the role. By providing environment variables you can slightly modify the behaviour of the script.
 
     DISTRO=debian9 ./tests/test.sh
 
