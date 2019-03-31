@@ -24,6 +24,19 @@ I assume you have a process in place to configure apache2 with a valid TLS confi
 * Ubuntu 18.04
 * Debian 9
 
+## Role Variables
+
+All variables are defined in defaults/main.yml.
+
+## Example Playbook
+
+    ---
+    - hosts: check_mk_server
+      roles:
+        - check_mk
+      vars:
+        - cmk_site_name: cmk
+
 ## Configuration Files
 
 This role should be idempotent, like any other ansible role. Because of this I try to use locations for the configuration files which will not get overwritten when changing settings on the web interfaces of the different tools.
