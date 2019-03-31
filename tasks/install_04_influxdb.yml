@@ -34,6 +34,10 @@
     enabled: true
   when: influxdb_installed.changed or influxdb_configchange.changed
 
+- name: Waiting for influxdb
+  wait_for:
+    port: 8086
+
 - name: Creating Nagflux database
   influxdb_database:
     database_name: "{{ cmk_influxdb_nagflux_name }}"
