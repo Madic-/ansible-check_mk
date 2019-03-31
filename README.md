@@ -11,7 +11,7 @@ The intention of this ansible role is to replicate some of the functionality fro
   * [x] Using Check_MK Users
   * [x] Pre-configuring Check_MK Site in Thruk
 * [x] [Grafana](https://grafana.com)
-  * [ ] [Histou](https://github.com/Griesbacher/histou)
+  * [x] [Histou](https://github.com/Griesbacher/histou)
   * [x] Adding InfluxDB Nagflux datasource
 * [x] [InfluxDB](https://www.influxdata.com)
   * [x] Pre-configuring Nagflux database
@@ -53,6 +53,11 @@ Configurations located beneath /etc/thruk/thruk_local.d will not be shown in the
     /etc/grafana/provisioning/datasources/influxdb-nagflux.yml
 
 Provisioning file for the nagflux database.
+
+### Apache2
+
+    /etc/apache2/conf-enabled/grafana.conf
+    /etc/apache2/conf-enabled/histou.conf
 
 ## Using Check_MK Users in Thruk
 

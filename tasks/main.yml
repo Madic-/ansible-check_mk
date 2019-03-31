@@ -20,6 +20,10 @@
   import_tasks: install_05_grafana.yml
   tags: grafana
 
+- name: Including Histou installation tasks
+  import_tasks: install_06_histou.yml
+  tags: histou
+
 - name: Flush handlers
   meta: flush_handlers
   tags: check_mk, thruk, grafana

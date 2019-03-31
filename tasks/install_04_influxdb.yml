@@ -45,6 +45,6 @@
     user_password: "{{ cmk_influxdb_nagflux_password }}"
   register: nagflux_user
 
-- name: Grant all rights on nagflux database to {{ cmk_nagflux_user }}
+- name: Grant all rights on nagflux database to {{ cmk_influxdb_nagflux_user }}
   command: 'influx -execute "GRANT ALL ON {{ cmk_influxdb_nagflux_name }} TO {{ cmk_influxdb_nagflux_user }}"'
   when: nagflux_user.changed

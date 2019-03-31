@@ -54,3 +54,6 @@ cmk_influxdb_nagflux_password: nagflux
 
 # Grafana
 cmk_grafana_datasource_name: influxdb-nagflux-{{ cmk_influxdb_nagflux_name }}
+
+# Histou
+cmk_histou_version: 0.4.3

@@ -43,7 +43,7 @@
     regexp: ';http_addr ='
     replace: 'http_addr = 127.0.0.1'
 
-- name: Configuring apache2
+- name: Configuring apache2 for grafana
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
