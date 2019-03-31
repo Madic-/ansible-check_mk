@@ -43,11 +43,11 @@ By default no user, except for the user created through this role, has permissio
 
 It's possible to test the role against a docker container. You can run a provided test script from the root of the role. By providing environment variables you can slightly modify the behaviour.
 
-  DISTRO=ubuntu1804 ./tests/test.sh
+  DISTRO=debian9 ./tests/test.sh
 
 The following environment variables are availables:
 
 | Variable | Values | Usage |
 | --- | --- | --- |
 | DISTRO | ubuntu1804 <--<br>debian9 | Distribution to test against |
-| CLEANUP | true <--<br>false | At the end do not stop and remove docker container |
+| CLEANUP | true <--<br>false | Should the created docker container be stopped and removed |
