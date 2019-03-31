@@ -12,7 +12,7 @@
     deb: "https://mathias-kettner.de/support/{{ cmk_version }}/check-mk-raw-{{ cmk_version }}_0.{{ ansible_distribution_release }}_amd64.deb"
     state: present
   notify:
-    - Starting Apache2
+    - Restarting Apache2
 
 - name: Getting installed check_mk sites
   command: "omd sites -b"

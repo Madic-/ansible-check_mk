@@ -47,6 +47,10 @@ cmk_thruk_menu: |
   do '/usr/share/thruk/menu.conf';
   add_link('name' => 'Wato', 'href' => '/{{ cmk_site_name }}/', target => '_blank');
 
-# Nagflux
-cmk_nagflux_user: nagflux
-cmk_nagflux_password: nagflux
+# InfluxDB
+cmk_influxdb_nagflux_name: nagflux
+cmk_influxdb_nagflux_user: nagflux
+cmk_influxdb_nagflux_password: nagflux
+
+# Grafana
+cmk_grafana_datasource_name: influxdb-nagflux-{{ cmk_influxdb_nagflux_name }}

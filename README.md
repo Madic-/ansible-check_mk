@@ -10,9 +10,9 @@ The intention of this ansible role is to replicate some of the functionality fro
 * [x] [Thruk](https://www.thruk.org)
   * [x] Using Check_MK Users
   * [x] Pre-configuring Check_MK Site in Thruk
-* [ ] [Grafana](https://grafana.com)
+* [x] [Grafana](https://grafana.com)
   * [ ] [Histou](https://github.com/Griesbacher/histou)
-  * [ ] Adding InfluxDB Nagflux datasource
+  * [x] Adding InfluxDB Nagflux datasource
 * [x] [InfluxDB](https://www.influxdata.com)
   * [x] Pre-configuring Nagflux database
 * [ ] [Nagflux](https://github.com/Griesbacher/nagflux)
@@ -47,6 +47,12 @@ This role should be idempotent, like any other ansible role. Because of this I t
     /etc/thruk/thruk_local.d/thruk_ansible.conf
 
 Configurations located beneath /etc/thruk/thruk_local.d will not be shown in the Thruk WebUI, e.g. the backend configuration. If I would use /etc/thruk/thruk_local.conf changes done in the Thruk WebUI would get overwritten when running the role again.
+
+#### Grafana
+
+    /etc/grafana/provisioning/datasources/influxdb-nagflux.yml
+
+Provisioning file for the nagflux database.
 
 ## Using Check_MK Users in Thruk
 

@@ -37,14 +37,14 @@
 
 - name: Creating Nagflux database
   influxdb_database:
-    database_name: nagflux
+    database_name: "{{ cmk_influxdb_nagflux_name }}"
 
 - name: Creating user for the Nagflux database
   influxdb_user:
-    user_name: "{{ cmk_nagflux_user }}"
-    user_password: "{{ cmk_nagflux_password }}"
+    user_name: "{{ cmk_influxdb_nagflux_user }}"
+    user_password: "{{ cmk_influxdb_nagflux_password }}"
   register: nagflux_user
 
 - name: Grant all rights on nagflux database to {{ cmk_nagflux_user }}
-  command: 'influx -database nagflux -execute "GRANT ALL ON nagflux TO {{ cmk_nagflux_user }}"'
+  command: 'influx -execute "GRANT ALL ON {{ cmk_influxdb_nagflux_name }} TO {{ cmk_influxdb_nagflux_user }}"'
   when: nagflux_user.changed

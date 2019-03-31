@@ -16,7 +16,7 @@
     - { src: thruk_config.conf.j2, dest: /etc/thruk/thruk_local.d/thruk_ansible.conf }
     - { src: thruk_menu.conf.j2, dest: /etc/thruk/menu_local.conf }
   notify:
-    - Starting Apache2
+    - Restarting Apache2
     - Restarting Thruk
 
 - name: Checking Thruks htpasswd file

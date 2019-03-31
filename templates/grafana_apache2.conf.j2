@@ -1,0 +1,5 @@
+# {{ ansible_managed }}
+
+ProxyPreserveHost On
+ProxyPass /grafana http://127.0.0.1:3000
+ProxyPassReverse /grafana http://127.0.0.1:3000

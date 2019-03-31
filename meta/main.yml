@@ -2,7 +2,7 @@
 galaxy_info:
   author: "Michael Neese"
   description: Ansible playbook for installing check_mk
-  min_ansible_version: 2.2
+  min_ansible_version: 2.5
   license: MIT
   platforms:
   - name: Ubuntu

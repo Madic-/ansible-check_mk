@@ -18,6 +18,11 @@
       register: command_result
       failed_when: "'disabled' in command_result.stdout"
 
+    - name: Check if grafana is enabled
+      command: systemctl is-enabled grafana-server
+      register: command_result
+      failed_when: "'disabled' in command_result.stdout"
+
     - name: Check if apache2 is running
       shell: "systemctl status apache2 | grep -i running"
       register: status
@@ -30,5 +35,10 @@
 
     - name: Check if influxdb is running
       shell: "systemctl status influxdb | grep -i running"
+      register: status
+      failed_when: status.rc != 0
+
+    - name: Check if grafana is running
+      shell: "systemctl status grafana-server | grep -i running"
       register: status
       failed_when: status.rc != 0

@@ -1,0 +1,12 @@
+# {{ ansible_managed }}
+apiVersion: 1
+
+datasources:
+  - name: "{{ cmk_grafana_datasource_name }}"
+    type: influxdb
+    access: proxy
+    database: "{{ cmk_influxdb_nagflux_name }}"
+    user: "{{ cmk_influxdb_nagflux_user }}"
+    password: "{{ cmk_influxdb_nagflux_password }}"
+    url: http://127.0.0.1:8086
+    isDefault: true

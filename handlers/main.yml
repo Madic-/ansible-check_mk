@@ -1,13 +1,19 @@
 ---
 
-- name: Starting Apache2
+- name: Restarting Apache2
   systemd:
     name: apache2
-    state: started
+    state: restarted
     enabled: true
 
 - name: Restarting Check_MK
   command: omd restart {{ cmk_site_name }}
+
+- name: Restarting Grafana
+  systemd:
+    name: grafana-server
+    state: restarted
+    enabled: true
 
 - name: Restarting Thruk
   systemd:

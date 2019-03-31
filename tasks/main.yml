@@ -2,7 +2,7 @@
 
 - name: Including basic setup tasks
   import_tasks: install_01_basic.yml
-  tags: check_mk, thruk, influxdb
+  tags: check_mk, thruk, influxdb, grafana
 
 - name: Including Check_MK tasks
   import_tasks: install_02_cmk.yml
@@ -16,9 +16,13 @@
   import_tasks: install_04_influxdb.yml
   tags: influxdb
 
+- name: Including Grafana installation tasks
+  import_tasks: install_05_grafana.yml
+  tags: grafana
+
 - name: Flush handlers
   meta: flush_handlers
-  tags: check_mk, thruk, influxdb
+  tags: check_mk, thruk, grafana
 
 - name: Informational Output
   debug:
@@ -26,6 +30,7 @@
       - ""
       - "Check_MK URL: http://{{ inventory_hostname }}/{{ cmk_site_name }}/check_mk"
       - "Thruk URL: http://{{ inventory_hostname }}/thruk"
+      - "Grafana URL: http://{{ inventory_hostname }}/grafana"
       - "Default user: {{ cmk_default_user }}"
       - "Default password: {{ cmk_default_password }}"
-  tags: check_mk, thruk
+  tags: check_mk, thruk, grafana
