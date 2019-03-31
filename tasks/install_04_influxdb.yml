@@ -37,6 +37,7 @@
 - name: Waiting for influxdb
   wait_for:
     port: 8086
+    delay: 1
 
 - name: Creating Nagflux database
   influxdb_database:
