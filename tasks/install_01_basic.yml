@@ -1,10 +1,14 @@
 ---
 
-- name: Installing requirements
+- name: Installing requirements via apt
   apt:
-    name: "{{ cmk_basic_requirements }}"
+    name: "{{ cmk_apt_requirements }}"
     state: present
     update_cache: yes
+
+- name: Installing python requirements
+  pip:
+    name: "{{ cmk_python_requirements }}"
 
 - name: Adding apt key for consol labs repo
   apt_key:

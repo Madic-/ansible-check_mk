@@ -1,8 +1,10 @@
 ---
 
+# Check_MK variables
 cmk_version: 1.5.0p13
 cmk_site_name: cmk
-cmk_basic_requirements:
+cmk_apt_requirements:
+  - apt-transport-https
   - freeipmi
   - telnet
   - libipc-run-perl
@@ -13,6 +15,9 @@ cmk_basic_requirements:
   - python-passlib
   - dirmngr
   - xz-utils
+cmk_python_requirements:
+  - influxdb
+  - requests
 cmk_default_user: cmkadmin
 cmk_default_password: cmk
 # Allowed values: nagios, icinga
@@ -36,6 +41,12 @@ cmk_site_config:
   - { name: LIVESTATUS_TCP_ONLY_FROM, value: "0.0.0.0" }
   - { name: LIVESTATUS_TCP_PORT,      value: "6557" }
   - { name: NSCA,                     value: "off" }
+
+# Thruk variables
 cmk_thruk_menu: |
   do '/usr/share/thruk/menu.conf';
   add_link('name' => 'Wato', 'href' => '/{{ cmk_site_name }}/', target => '_blank');
+
+# Nagflux
+cmk_nagflux_user: nagflux
+cmk_nagflux_password: nagflux

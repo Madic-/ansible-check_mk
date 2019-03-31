@@ -11,6 +11,7 @@ set -e
 
 CID=$(date +%s)
 CLEANUP=${CLEANUP:-"true"}
+DISTRO=${DISTRO:-"ubuntu1804"}
 ANSIBLE_CONFIG=/etc/ansible/roles/role_under_test/tests/ansible.cfg
 
 if [ "$DISTRO" = 'ubuntu1804' ]; then

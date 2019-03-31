@@ -2,7 +2,7 @@
 
 - name: Including basic setup tasks
   import_tasks: install_01_basic.yml
-  tags: check_mk, thruk
+  tags: check_mk, thruk, influxdb
 
 - name: Including Check_MK tasks
   import_tasks: install_02_cmk.yml
@@ -12,9 +12,13 @@
   import_tasks: install_03_thruk.yml
   tags: thruk
 
+- name: Including InfluxDB installation tasks
+  import_tasks: install_04_influxdb.yml
+  tags: influxdb
+
 - name: Flush handlers
   meta: flush_handlers
-  tags: check_mk, thruk
+  tags: check_mk, thruk, influxdb
 
 - name: Informational Output
   debug:
