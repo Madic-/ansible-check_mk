@@ -9,7 +9,7 @@ The intention of this ansible role is to replicate some of the functionality fro
   * [ ] Dual Graphing pnp4nagios and InfluxDB/Grafana
 * [x] [Mod-Gearman](https://mod-gearman.org/)
 * [x] [Thruk](https://www.thruk.org)
-  * [x] Using Check_MK Users
+  * [x] Granting default Check_MK User administrative permission
   * [x] Pre-configuring Check_MK Site in Thruk
 * [x] [Grafana](https://grafana.com)
   * [x] [Histou](https://github.com/Griesbacher/histou)

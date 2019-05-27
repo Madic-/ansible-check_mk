@@ -94,7 +94,7 @@ encryption=yes
 # The shared password will be read from this file.
 # Use either key or keyfile. Only the first 32
 # characters will be used.
-key={{ cmk_mod_gearman_secret  }}
+keyfile=/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/secret.key
 
 
 # use_uniq_jobs

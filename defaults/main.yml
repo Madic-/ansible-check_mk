@@ -64,5 +64,5 @@ cmk_histou_version: 0.4.3
 # https://github.com/Griesbacher/nagflux/releases
 cmk_nagflux_version: 0.4.1
 
-# mod_gearman
+# mod-gearman
 cmk_mod_gearman_secret: YOURSECRETHERE
