@@ -30,7 +30,3 @@
     - { src: nagflux_config.gcfg.j2, dest: /etc/nagflux/config.gcfg }
   notify:
     - Restarting Nagflux
-
-#- name: Installing mod-gearman
-#  apt:
-#    name: 

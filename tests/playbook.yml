@@ -4,3 +4,6 @@
 
   roles:
     - role_under_test
+
+#  vars:
+#    cmk_url: http://10.59.100.229:3141/check-mk-raw-{{ cmk_version }}_0.{{ ansible_distribution_release }}_amd64.deb

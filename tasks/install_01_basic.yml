@@ -15,6 +15,13 @@
     id: F8C1CA08A57B9ED7
     keyserver: hkps://keys.gnupg.net
 
+- name: Adding consol labs stable repo
+  apt_repository:
+    filename: labs_consol_stable
+    repo: "deb http://labs.consol.de/repo/stable/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} main"
+    update_cache: no
+    state: present
+
 - name: Making sure the man8 folder exists
   file:
     path: /usr/share/man/man8

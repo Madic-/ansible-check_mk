@@ -28,9 +28,13 @@
   import_tasks: install_07_nagflux.yml
   tags: nagflux
 
+- name: Including mod_gearman installation tasks
+  import_tasks: install_08_mod_gearman.yml
+  tags: gearman
+
 - name: Flush handlers
   meta: flush_handlers
-  tags: check_mk, thruk, grafana
+  tags: check_mk, thruk, grafana, gearman
 
 - name: Informational Output
   debug:

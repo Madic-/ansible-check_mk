@@ -10,6 +10,8 @@
 set -e
 
 CID=$(date +%s)
+APT_CACHER_ENABLED=${APT_CACHER_ENABLED:-"false"}
+APT_CACHER_URL=${APT_CACHER_URL:-"http://apt-cacher-ng:3142/"}
 CLEANUP=${CLEANUP:-"true"}
 DISTRO=${DISTRO:-"ubuntu1804"}
 ANSIBLE_CONFIG=/etc/ansible/roles/role_under_test/tests/ansible.cfg
@@ -28,6 +30,10 @@ docker run --detach --volume="$PWD":/etc/ansible/roles/role_under_test:ro --name
 
 docker inspect "$CID"
 
+if [ "$APT_CACHER_ENABLED" = true ]; then
+  docker exec --tty "$CID" /bin/bash -c "echo 'Acquire::http::Proxy \"$APT_CACHER_URL\";' > /etc/apt/apt.conf.d/01proxy.conf"
+fi
+
 docker exec --tty "$CID" env TERM=xterm env ansible --version
 
 docker exec --tty "$CID" env TERM=xterm env ansible all -i "localhost," -c local -m setup
@@ -40,18 +46,18 @@ docker exec --tty "$CID" env TERM=xterm env ansible-playbook /etc/ansible/roles/
 idempotence=$(mktemp)
 echo -e "\n\nRunning idempotence test..."
 docker exec --tty "$CID" env TERM=xterm env ansible-playbook \
- /etc/ansible/roles/role_under_test/tests/playbook.yml | tee -a $idempotence
-tail -n 200 $idempotence \
- | grep -q 'changed=0.*failed=0' \
- && (echo 'Idempotence test passed' && exit 0) || (echo 'Idempotence test failed' && exit 1)
+  /etc/ansible/roles/role_under_test/tests/playbook.yml | tee -a $idempotence
+tail -n 200 $idempotence |
+  grep -q 'changed=0.*failed=0' &&
+  (echo 'Idempotence test passed' && exit 0) || (echo 'Idempotence test failed' && exit 1)
 
 # Run tests
 echo -e "\n\nRunning smoke tests..."
 docker exec --tty "$CID" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml
 
 if [ "$CLEANUP" = true ]; then
-echo -e "\n\nStopping container..."
-docker stop "$CID"
-echo "Removing container..."
-docker rm "$CID"
+  echo -e "\n\nStopping container..."
+  docker stop "$CID"
+  echo "Removing container..."
+  docker rm "$CID"
 fi

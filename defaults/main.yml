@@ -21,7 +21,7 @@ cmk_python_requirements:
 cmk_default_user: cmkadmin
 cmk_default_password: cmk
 # Allowed values: nagios, icinga
-cmk_monitoring_core: icinga
+cmk_monitoring_core: nagios
 cmk_site_config:
   - { name: ADMIN_MAIL,               value: "cmk@example.com" }
   - { name: AUTOSTART,                value: "on" }
@@ -36,11 +36,12 @@ cmk_site_config:
   - { name: MKEVENTD_SNMPTRAP,        value: "on" }
   - { name: MKEVENTD_SYSLOG,          value: "on" }
   - { name: MKEVENTD_SYSLOG_TCP,      value: "on" }
-  - { name: PNP4NAGIOS,               value: "on" }
+  - { name: PNP4NAGIOS,               value: "gearman" }
   - { name: LIVESTATUS_TCP,           value: "on" }
   - { name: LIVESTATUS_TCP_ONLY_FROM, value: "0.0.0.0" }
   - { name: LIVESTATUS_TCP_PORT,      value: "6557" }
   - { name: NSCA,                     value: "off" }
+cmk_url: "https://mathias-kettner.de/support/{{ cmk_version }}/check-mk-raw-{{ cmk_version }}_0.{{ ansible_distribution_release }}_amd64.deb"
 
 # Thruk variables
 cmk_thruk_menu: |
@@ -62,3 +63,6 @@ cmk_histou_version: 0.4.3
 # Nagflux
 # https://github.com/Griesbacher/nagflux/releases
 cmk_nagflux_version: 0.4.1
+
+# mod_gearman
+cmk_mod_gearman_secret: YOURSECRETHERE

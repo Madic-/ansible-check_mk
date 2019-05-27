@@ -15,7 +15,7 @@
   notify:
     - Restarting Apache2
 
-- name: Download and extract histou
+- name: Downloading and extracting histou
   unarchive:
     src: https://github.com/Griesbacher/histou/archive/v{{ cmk_histou_version }}.tar.gz
     dest: /opt

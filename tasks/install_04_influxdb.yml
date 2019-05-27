@@ -8,7 +8,7 @@
 - name: Adding InfluxDB repository
   apt_repository:
     filename: influxdata_stable
-    repo: "deb https://repos.influxdata.com/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable"
+    repo: "deb http://repos.influxdata.com/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable"
     update_cache: yes
     state: present
 

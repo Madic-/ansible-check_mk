@@ -1,0 +1,50 @@
+---
+
+- name: Installing mod-gearman-module
+  apt:
+    name: mod-gearman-module
+    state: latest
+    update_cache: yes
+  # mod-gearman-module from console repository is buggy
+  # 1. chown: invalid user: 'naemon:naemon'
+  # 2. cp: cannot stat '/usr/share/doc/mod-gearman-module/examples/module.conf.gz': No such file or directory
+  ignore_errors: yes
+
+- name: Creating required mod_gearman directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ cmk_site_name }}"
+    group: "{{ cmk_site_name }}"
+    mode: 0755
+  with_items:
+    - /opt/omd/sites/{{ cmk_site_name }}/etc/mod_gearman
+    - /opt/omd/sites/{{ cmk_site_name }}/var/log/gearman
+
+- name: Writing nagios mod_gearman.cfg
+  copy:
+    dest: /opt/omd/sites/{{ cmk_site_name }}/etc/mod_gearman/mod_gearman.cfg
+    owner: "{{ cmk_site_name }}"
+    group: "{{ cmk_site_name }}"
+    content: |
+      #
+      # Mod-Gearman NEB Module
+      #
+      
+      event_broker_options=-1
+      broker_module=/usr/lib/mod_gearman/mod_gearman_nagios3.o config=/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/server.cfg
+
+- name: Linking mod_gearman.cfg to nagios.d
+  file:
+    src: /opt/omd/sites/{{ cmk_site_name }}/etc/mod_gearman/mod_gearman.cfg
+    dest: /opt/omd/sites/{{ cmk_site_name }}/etc/nagios/nagios.d/mod_gearman.cfg
+    owner: "{{ cmk_site_name }}"
+    group: "{{ cmk_site_name }}"
+    state: link
+
+- name: Writing mod_gearman server.cfg
+  template:
+    src: mod_gearman_server.cfg.j2
+    dest: /opt/omd/sites/{{ cmk_site_name }}/etc/mod_gearman/server.cfg
+    owner: "{{ cmk_site_name }}"
+    group: "{{ cmk_site_name }}"
