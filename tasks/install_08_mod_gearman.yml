@@ -2,7 +2,9 @@
 
 - name: Installing mod-gearman-module
   apt:
-    name: mod-gearman-module
+    name:
+      - mod-gearman-module
+      - libgearman7
     state: latest
     update_cache: yes
   # mod-gearman-module from console repository is buggy
