@@ -1,0 +1,44 @@
+---
+
+- hosts: localhost
+
+  tasks:
+    - name: Loading default variables
+      include_vars:
+        dir: defaults
+
+    - name: Creating a unique temporary container name
+      set_fact:
+        container_name: cmk_build_{{ lookup('pipe', 'date "+%Y%m%d%H%M%S"') }}
+
+    - name: Copying this role to the destination host
+      synchronize:
+        src: ../
+        dest: /tmp/ansible-check-mk
+        recursive: yes
+
+    - name: Building check_mk docker container
+      command: "docker run
+        -v /tmp/ansible-check-mk:/tmp/ansible-check-mk
+        -w /tmp/ansible-check-mk
+        --name={{ container_name }}
+        geerlingguy/docker-ubuntu1804-ansible:latest
+        ansible-playbook playbook.yml -c local"
+
+    - name: Copying docker-entrypoint.sh into image
+      command: "docker cp docker-entrypoint.sh {{ container_name }}:/docker-entrypoint.sh"
+
+    - name: Creating a docker image from the container
+      command: "docker commit
+        -c 'EXPOSE 80'
+        -c 'CMD [\"docker-entrypoint.sh\"]'
+        {{ container_name }}
+        check_mk:{{ cmk_ansible_version }}"
+
+    - name: Deleting the container
+      command: docker rm -f -v {{ container_name }}
+
+    - name: Deleting the role
+      file:
+        path: /tmp/ansible-check-mk
+        state: absent

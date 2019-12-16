@@ -1,0 +1,9 @@
+---
+
+- hosts: localhost
+
+  roles:
+    - ./
+
+#  vars:
+#    cmk_url: http://172.16.10.135:3141/check-mk-raw-{{ cmk_version }}_0.{{ ansible_distribution_release }}_amd64.deb

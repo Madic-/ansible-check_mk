@@ -1,5 +1,7 @@
 ---
 
+cmk_ansible_version: 1.0.0
+
 # Check_MK variables
 cmk_version: 1.5.0p13
 cmk_site_name: cmk
