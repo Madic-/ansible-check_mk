@@ -30,7 +30,7 @@
     dest: /etc/thruk/htpasswd
     force: yes
     state: link
-  when: "thrukpasswd.stat.islnk == False"
+  when: not thrukpasswd.stat.islnk
 
 - name: Give user {{ cmk_default_user }} authorized_for_admin permissions
   replace:

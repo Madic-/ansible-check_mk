@@ -5,7 +5,7 @@
     name:
       - mod-gearman-module
       - libgearman7
-    state: latest
+    state: present
     update_cache: yes
   # mod-gearman-module from console repository is buggy
   # 1. chown: invalid user: 'naemon:naemon'
@@ -32,7 +32,7 @@
       #
       # Mod-Gearman NEB Module
       #
-      
+
       event_broker_options=-1
       broker_module=/usr/lib/mod_gearman/mod_gearman_nagios3.o config=/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/server.cfg
 

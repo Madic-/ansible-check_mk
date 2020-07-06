@@ -28,7 +28,7 @@
   register: influxdb_configchange
 
 - name: (Re)starting Influxdb
-  systemd:
+  service:
     name: influxdb
     state: restarted
     enabled: true

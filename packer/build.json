@@ -1,0 +1,43 @@
+{
+  "builders": [
+    {
+      "type": "docker",
+      "image": "debian:buster-slim",
+      "commit": true
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "apt-get -y update && apt-get install -y python3-minimal python3-apt aptitude"
+      ]
+    },
+    {
+      "type": "ansible",
+      "user": "root",
+      "playbook_file": "provision.yml",
+      "extra_arguments": [
+        "-e",
+        "ansible_python_interpreter=/usr/bin/python3",
+        "-e",
+        "cmk_site_name=cmk"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "apt-get autoremove -y && rm -rf /var/lib/apt/lists/*"
+      ]
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "docker-tag",
+        "repository": "madic/checkmk",
+        "tags": "testing"
+      }
+    ]
+  ]
+}
