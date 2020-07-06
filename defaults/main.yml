@@ -3,7 +3,7 @@
 cmk_ansible_version: 1.0.0
 
 # Check_MK variables
-cmk_version: 1.5.0p13
+cmk_version: 1.6.0p13
 cmk_site_name: cmk
 cmk_apt_requirements:
   - apt-transport-https
@@ -12,14 +12,18 @@ cmk_apt_requirements:
   - libipc-run-perl
   - mtr
   - git
-  - python-netsnmp
+  #- python-netsnmp
   - mailutils
-  - python-passlib
+  - python3-passlib
   - dirmngr
   - xz-utils
+  - python3-setuptools
+  - python3-pip
+  - libsnmp-dev
 cmk_python_requirements:
   - influxdb
   - requests
+  - python3-netsnmp
 cmk_default_user: cmkadmin
 cmk_default_password: cmk
 # Allowed values: nagios, icinga
@@ -43,7 +47,7 @@ cmk_site_config:
   - { name: LIVESTATUS_TCP_ONLY_FROM, value: "0.0.0.0" }
   - { name: LIVESTATUS_TCP_PORT,      value: "6557" }
   - { name: NSCA,                     value: "off" }
-cmk_url: "https://mathias-kettner.de/support/{{ cmk_version }}/check-mk-raw-{{ cmk_version }}_0.{{ ansible_distribution_release }}_amd64.deb"
+cmk_url: "https://checkmk.com/support/{{ cmk_version }}/check-mk-raw-{{ cmk_version }}_0.{{ ansible_distribution_release }}_amd64.deb"
 
 # Thruk variables
 cmk_thruk_menu: |

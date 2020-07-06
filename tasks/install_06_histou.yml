@@ -59,4 +59,4 @@
     owner: root
     group: root
     state: link
-  when: histou_symlink.stat.exists == False 
+  when: not histou_symlink.stat.exists

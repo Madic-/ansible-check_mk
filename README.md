@@ -1,6 +1,6 @@
 # Ansible Check_MK
 
-[![Maintenance](https://img.shields.io/maintenance/yes/2019.svg)](https://github.com/Madic-/ansible-check_mk) [![Build Status](https://travis-ci.org/Madic-/ansible-check_mk.svg?branch=master)](https://travis-ci.org/Madic-/ansible-check_mk)
+[![Maintenance](https://img.shields.io/maintenance/yes/2020.svg)](https://github.com/Madic-/ansible-check_mk) [![Build Status](https://travis-ci.org/Madic-/ansible-check_mk.svg?branch=master)](https://travis-ci.org/Madic-/ansible-check_mk)
 
 The intention of this ansible role is to replicate some of the functionality from the [OMD](https://labs.consol.de/de/omd/) v2.X packages with focus on Check_MK RAW Edition. OMD hasn't updated Check_MK in years and finally removed it from version 3. So this role is going to install the following tools and pre-configure them:
 
@@ -73,9 +73,9 @@ It's possible to test the role against a docker container. The provided test scr
 
 The following environment variables are availables:
 
-| Variable | Values | Usage |
-| --- | --- | --- |
-| APT_CACHER_ENABLED | true<br>**false** | Enable apt-cacher-ng usage |
-| APT_CACHER_URL | http://apt-cacher-ng:3142/ | URL to the apt-cacher-ng proxy |
-| CLEANUP | **true**<br>false | Should the docker container at the end be stopped and removed |
-| DISTRO | **ubuntu1804**<br>debian9 | Distribution to test against |
+| Variable           | Values                     | Usage                                                         |
+| ------------------ | -------------------------- | ------------------------------------------------------------- |
+| APT_CACHER_ENABLED | true<br>**false**          | Enable apt-cacher-ng usage                                    |
+| APT_CACHER_URL     | http://apt-cacher-ng:3142/ | URL to the apt-cacher-ng proxy                                |
+| CLEANUP            | **true**<br>false          | Should the docker container at the end be stopped and removed |
+| DISTRO             | **ubuntu1804**<br>debian9  | Distribution to test against                                  |

@@ -1,0 +1,9 @@
+---
+
+- name: Installing checkmk
+  hosts: all
+  roles:
+      - "{{ playbook_dir }}/../"
+
+  #vars:
+  #  - cmk_site_name: cmk

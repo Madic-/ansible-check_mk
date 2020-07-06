@@ -1,7 +1,7 @@
 ---
 
 - name: Restarting Apache2
-  systemd:
+  service:
     name: apache2
     state: restarted
     enabled: true
@@ -10,19 +10,19 @@
   command: omd restart {{ cmk_site_name }}
 
 - name: Restarting Grafana
-  systemd:
+  service:
     name: grafana-server
     state: restarted
     enabled: true
 
 - name: Restarting Nagflux
-  systemd:
+  service:
     name: nagflux
     state: restarted
     enabled: true
 
 - name: Restarting Thruk
-  systemd:
+  service:
     name: thruk
     state: restarted
     enabled: true
