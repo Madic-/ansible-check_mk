@@ -12,6 +12,7 @@
     dest: "{{ item.dest }}"
     owner: www-data
     group: www-data
+    mode: 0644
   with_items:
     - { src: thruk_config.conf.j2, dest: /etc/thruk/thruk_local.d/thruk_ansible.conf }
     - { src: thruk_menu.conf.j2, dest: /etc/thruk/menu_local.conf }

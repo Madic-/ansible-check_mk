@@ -22,8 +22,7 @@ I assume you have a process in place to configure apache2 with a valid TLS confi
 
 ## Supported Operating Systems
 
-* Ubuntu 18.04
-* Debian 9
+* Ubuntu 20.04
 
 ## Role Variables
 

@@ -22,6 +22,9 @@
     path: /opt/omd/sites/{{ cmk_site_name }}/etc/htpasswd
     name: "{{ cmk_default_user }}"
     password: "{{ cmk_default_password }}"
+    owner: "{{ cmk_site_name }}"
+    group: "{{ cmk_site_name }}"
+    mode: 0640
 
 - name: Creating required directories for user {{ cmk_site_name }}
   file:

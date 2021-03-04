@@ -1,18 +1,19 @@
 ---
 galaxy_info:
+  role_name: checkmk
   author: "Michael Neese"
-  description: Ansible playbook for installing check_mk
+  description: Ansible playbook for installing checkmk
   min_ansible_version: 2.5
   license: MIT
   platforms:
-  - name: Ubuntu
-    versions:
-      - bionic
-  - name: Debian
-      - stretch
+    - name: Ubuntu
+      versions:
+        - 20.04
   galaxy_tags:
     - checkmk
     - thruk
     - nagios
+    - grafana
+    - influxdb
     - monitoring
 dependencies: []

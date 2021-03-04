@@ -26,3 +26,9 @@
     name: thruk
     state: restarted
     enabled: true
+
+- name: Handler | Restarting Influxdb
+  systemd:
+    name: influxdb
+    state: restarted
+    enabled: true

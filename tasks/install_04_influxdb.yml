@@ -17,7 +17,8 @@
     name:
       - influxdb
     state: present
-  register: influxdb_installed
+  notify:
+    - Handler | Restarting Influxdb
 
 - name: Modifing InfluxDB hostname
   replace:
@@ -25,14 +26,10 @@
     regexp: 'hostname = "localhost"'
     replace: 'hostname = "{{ ansible_hostname }}"'
     backup: yes
-  register: influxdb_configchange
+  notify:
+    - Handler | Restarting Influxdb
 
-- name: (Re)starting Influxdb
-  service:
-    name: influxdb
-    state: restarted
-    enabled: true
-  when: influxdb_installed.changed or influxdb_configchange.changed
+- meta: flush_handlers
 
 - name: Waiting for influxdb
   wait_for:
@@ -52,3 +49,4 @@
 - name: Grant all rights on nagflux database to {{ cmk_influxdb_nagflux_user }}
   command: 'influx -execute "GRANT ALL ON {{ cmk_influxdb_nagflux_name }} TO {{ cmk_influxdb_nagflux_user }}"'
   when: nagflux_user.changed
+  tags: skip_ansible_lint

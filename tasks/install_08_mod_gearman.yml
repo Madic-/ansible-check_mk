@@ -1,5 +1,18 @@
 ---
 
+# mod-gearman-module from console repository requires naemon user / group...
+# 1. chown: invalid user: 'naemon:naemon'
+# 2. cp: cannot stat '/usr/share/doc/mod-gearman-module/examples/module.conf.gz': No such file or directory
+- name: Adding group naemon
+  group:
+    name: naemon
+    state: present
+
+- name: Adding user naemon
+  user:
+    name: naemon
+    group: naemon
+
 - name: Installing mod-gearman-module
   apt:
     name:
@@ -7,10 +20,7 @@
       - libgearman7
     state: present
     update_cache: yes
-  # mod-gearman-module from console repository is buggy
-  # 1. chown: invalid user: 'naemon:naemon'
-  # 2. cp: cannot stat '/usr/share/doc/mod-gearman-module/examples/module.conf.gz': No such file or directory
-  ignore_errors: yes
+  #ignore_errors: yes
 
 - name: Creating required mod-gearman directories
   file:
@@ -28,11 +38,11 @@
     dest: /opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/mod-gearman.cfg
     owner: "{{ cmk_site_name }}"
     group: "{{ cmk_site_name }}"
+    mode: 0644
     content: |
       #
       # Mod-Gearman NEB Module
       #
-
       event_broker_options=-1
       broker_module=/usr/lib/mod_gearman/mod_gearman_nagios3.o config=/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/server.cfg
 
@@ -41,6 +51,7 @@
     dest: /opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/secret.key
     owner: "{{ cmk_site_name }}"
     group: "{{ cmk_site_name }}"
+    mode: 0640
     content: |
       {{ cmk_mod_gearman_secret }}
 
@@ -58,3 +69,4 @@
     dest: /opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/server.cfg
     owner: "{{ cmk_site_name }}"
     group: "{{ cmk_site_name }}"
+    mode: 0644
