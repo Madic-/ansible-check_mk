@@ -12,6 +12,7 @@
     dest: "{{ item.dest }}"
     owner: www-data
     group: www-data
+    mode: 0644
   with_items:
     - { src: thruk_config.conf.j2, dest: /etc/thruk/thruk_local.d/thruk_ansible.conf }
     - { src: thruk_menu.conf.j2, dest: /etc/thruk/menu_local.conf }
@@ -30,7 +31,7 @@
     dest: /etc/thruk/htpasswd
     force: yes
     state: link
-  when: "thrukpasswd.stat.islnk == False"
+  when: not thrukpasswd.stat.islnk
 
 - name: Give user {{ cmk_default_user }} authorized_for_admin permissions
   replace:
