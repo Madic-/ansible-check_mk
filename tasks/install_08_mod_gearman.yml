@@ -31,9 +31,12 @@
 - name: mod-gearman | Installing
   apt:
     name:
+      - gearman
       - mod-gearman-module
+      - mod-gearman-tools
+      - libgearman-client-perl
+      - libcrypt-rijndael-perl
       #- libgearman7
-    default_release: focal
     state: present
     update_cache: yes
 
@@ -84,4 +87,12 @@
     dest: /opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/server.cfg
     owner: "{{ cmk_site_name }}"
     group: "{{ cmk_site_name }}"
+    mode: 0644
+
+- name: mod-gearman | Configuring | pnp4nagios gearman worker systemd unit
+  template:
+    src: pnp4nagios_gearman.service.j2
+    dest: /etc/systemd/system/pnp4nagios_gearman.service
+    owner: root
+    group: root
     mode: 0644
