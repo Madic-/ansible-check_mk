@@ -11,9 +11,8 @@ lint: |
   ansible-lint -c .ansible-lint playbook.yml
 platforms:
   - name: instance
-    image: "geerlingguy/docker-ubuntu2004-ansible:latest"
-    #command: ${MOLECULE_DOCKER_COMMAND:-""}
-    command: "/lib/systemd/systemd"
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2004}-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-/lib/systemd/systemd}
     volumes:
       - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
     privileged: true
@@ -21,14 +20,12 @@ platforms:
 provisioner:
   name: ansible
   playbooks:
-    converge: converge.yml
-  #config_options:
-  #  defaults:
-  #    interpreter_python: auto_silent
-  #    callback_whitelist: profile_tasks, timer, yaml
-    #connection:
-    #  pipelining: true
-  #env:
-  #  PY_COLORS: 1
+    converge: ${MOLECULE_PLAYBOOK:-converge.yml}
+  config_options:
+    defaults:
+      interpreter_python: auto_silent
+      callback_whitelist: profile_tasks, timer, yaml
+  env:
+    PY_COLORS: 1
 verifier:
   name: ansible
