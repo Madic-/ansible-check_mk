@@ -7,8 +7,8 @@ resource_file = /omd/sites/{{ cmk_site_name }}/etc/{{ cmk_monitoring_core }}/res
         name    = {{ cmk_site_name }}
         type    = livestatus
         <options>
-            #peer = /opt/omd/sites/{{ cmk_site_name }}/tmp/run/live
-            peer = 127.0.0.1:6557
+            peer = /opt/omd/sites/{{ cmk_site_name }}/tmp/run/live
+            #peer = 127.0.0.1:6557
         </options>
     </peer>
 </Component>
