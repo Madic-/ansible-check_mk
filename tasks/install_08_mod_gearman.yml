@@ -1,28 +1,40 @@
 ---
 
+# force mod-gearman-module from distribution repository
+- name: mod-gearman | Installing | Templating apt preferences for Ubuntu
+  blockinfile:
+    path: /etc/apt/preferences
+    create: yes
+    block: |
+      Package: mod-gearman-module
+      Pin: origin "archive.ubuntu.com"
+      Pin-Priority: 999
+    marker: "## {mark} ANSIBLE CHECKMK MANAGED BLOCK"
+  when: ansible_distribution == "Ubuntu"
+
 # mod-gearman-module from console repository requires naemon user / group...
 # 1. chown: invalid user: 'naemon:naemon'
 # 2. cp: cannot stat '/usr/share/doc/mod-gearman-module/examples/module.conf.gz': No such file or directory
-- name: Adding group naemon
-  group:
-    name: naemon
-    state: present
+#- name: Installing | Adding group naemon
+#  group:
+#    name: naemon
+#    state: present
 
-- name: Adding user naemon
-  user:
-    name: naemon
-    group: naemon
+#- name: Installing | Adding user naemon
+#  user:
+#    name: naemon
+#    group: naemon
 
-- name: Installing mod-gearman-module
+- name: mod-gearman | Installing
   apt:
     name:
       - mod-gearman-module
-      - libgearman7
+      #- libgearman7
+    default_release: focal
     state: present
     update_cache: yes
-  #ignore_errors: yes
 
-- name: Creating required mod-gearman directories
+- name: mod-gearman | Configuring | Creating required mod-gearman directories
   file:
     path: "{{ item }}"
     state: directory
@@ -33,7 +45,7 @@
     - /opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman
     - /opt/omd/sites/{{ cmk_site_name }}/var/log/gearman
 
-- name: Writing nagios mod-gearman.cfg
+- name: mod-gearman | Configuring | mod-gearman.cfg
   copy:
     dest: /opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/mod-gearman.cfg
     owner: "{{ cmk_site_name }}"
@@ -46,7 +58,7 @@
       event_broker_options=-1
       broker_module=/usr/lib/mod_gearman/mod_gearman_nagios3.o config=/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/server.cfg
 
-- name: Writing mod-gearman secretfile
+- name: mod-gearman | Configuring | mod-gearman secretfile
   copy:
     dest: /opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/secret.key
     owner: "{{ cmk_site_name }}"
@@ -55,7 +67,7 @@
     content: |
       {{ cmk_mod_gearman_secret }}
 
-- name: Linking mod-gearman.cfg to nagios.d
+- name: mod-gearman | Configuring | Linking mod-gearman.cfg to nagios.d
   file:
     src: /opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/mod-gearman.cfg
     dest: /opt/omd/sites/{{ cmk_site_name }}/etc/nagios/nagios.d/mod-gearman.cfg
@@ -63,7 +75,7 @@
     group: "{{ cmk_site_name }}"
     state: link
 
-- name: Writing mod-gearman server.cfg
+- name: mod-gearman | Configuring | mod-gearman server.cfg
   template:
     src: mod-gearman_server.cfg.j2
     dest: /opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/server.cfg

@@ -1,12 +1,12 @@
 ---
 
-- name: Installing Thruk
+- name: Thruk | Installing
   apt:
     name: thruk
     state: present
     update_cache: yes
 
-- name: Pre-configuring thruk
+- name: Thruk | Configuring
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -20,12 +20,12 @@
     - Restarting Apache2
     - Restarting Thruk
 
-- name: Checking Thruks htpasswd file
+- name: Thruk | Configuring | Checking Thruks htpasswd file
   stat:
     path: /etc/thruk/htpasswd
   register: thrukpasswd
 
-- name: Symlinking Check_MKs htpasswd with Thruks htpasswd
+- name: Thruk | Configuring | Symlinking Checkmks htpasswd with Thruks htpasswd
   file:
     src: /opt/omd/sites/{{ cmk_site_name }}/etc/htpasswd
     dest: /etc/thruk/htpasswd
@@ -33,13 +33,13 @@
     state: link
   when: not thrukpasswd.stat.islnk
 
-- name: Give user {{ cmk_default_user }} authorized_for_admin permissions
+- name: Thruk | Configuring | Give user {{ cmk_default_user }} authorized_for_admin permissions
   replace:
     path: /etc/thruk/cgi.cfg
     regexp: 'thrukadmin'
     replace: '{{ cmk_default_user }}'
 
-- name: Setting permissions for Thruk configuration files
+- name: Thruk | Configuring | Setting permissions for Thruk configuration files
   file:
     path: /etc/thruk/cgi.cfg
     owner: www-data

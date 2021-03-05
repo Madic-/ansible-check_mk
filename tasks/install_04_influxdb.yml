@@ -1,18 +1,18 @@
 ---
 
-- name: Adding apt key for influxdb repo
+- name: InfluxDB | Installing | Adding apt key for influxdb repo
   apt_key:
     url: https://repos.influxdata.com/influxdb.key
     state: present
 
-- name: Adding InfluxDB repository
+- name: InfluxDB | Installing | Adding InfluxDB repository
   apt_repository:
     filename: influxdata_stable
     repo: "deb http://repos.influxdata.com/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable"
     update_cache: yes
     state: present
 
-- name: Installing InfluxDB
+- name: InfluxDB | Installing
   apt:
     name:
       - influxdb
@@ -20,7 +20,7 @@
   notify:
     - Handler | Restarting Influxdb
 
-- name: Modifing InfluxDB hostname
+- name: InfluxDB | Configuring | Modifing InfluxDB hostname
   replace:
     dest: /etc/influxdb/influxdb.conf
     regexp: 'hostname = "localhost"'
@@ -31,22 +31,22 @@
 
 - meta: flush_handlers
 
-- name: Waiting for influxdb
+- name: InfluxDB | Waiting for influxdb
   wait_for:
     port: 8086
     delay: 1
 
-- name: Creating Nagflux database
+- name: InfluxDB | Configuring | Creating database nagflux
   influxdb_database:
     database_name: "{{ cmk_influxdb_nagflux_name }}"
 
-- name: Creating user for the Nagflux database
+- name: InfluxDB | InfluxDB | Configuring | Creating user {{ cmk_influxdb_nagflux_user }} for database nagflux
   influxdb_user:
     user_name: "{{ cmk_influxdb_nagflux_user }}"
     user_password: "{{ cmk_influxdb_nagflux_password }}"
   register: nagflux_user
 
-- name: Grant all rights on nagflux database to {{ cmk_influxdb_nagflux_user }}
+- name: InfluxDB | Configuring | Grant all rights on database nagflux to {{ cmk_influxdb_nagflux_user }}
   command: 'influx -execute "GRANT ALL ON {{ cmk_influxdb_nagflux_name }} TO {{ cmk_influxdb_nagflux_user }}"'
   when: nagflux_user.changed
   tags: skip_ansible_lint

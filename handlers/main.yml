@@ -6,7 +6,7 @@
     state: restarted
     enabled: true
 
-- name: Restarting Check_MK
+- name: Restarting Checkmk
   command: omd restart {{ cmk_site_name }}
 
 - name: Restarting Grafana

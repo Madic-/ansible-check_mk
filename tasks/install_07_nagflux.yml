@@ -1,12 +1,12 @@
 ---
 
-- name: Downloading nagflux
+- name: Nagflux | Installing
   get_url:
     url: https://github.com/Griesbacher/nagflux/releases/download/v{{ cmk_nagflux_version }}/nagflux
     dest: /usr/local/sbin/nagflux
     mode: 0755
 
-- name: Creating nagflux config directory
+- name: Nagflux | Configuring | Creating nagflux config directory
   file:
     path: "{{ item }}"
     state: directory
@@ -18,7 +18,7 @@
     - /opt/omd/sites/{{ cmk_site_name }}/var/log/nagflux
     - /opt/omd/sites/{{ cmk_site_name }}/var/nagflux
 
-- name: Configuring nagflux and nagflux startup units
+- name: Nagflux | Configuring | nagflux and nagflux systemd unit
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"

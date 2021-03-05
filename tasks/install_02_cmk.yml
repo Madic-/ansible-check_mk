@@ -1,23 +1,23 @@
 ---
 
-- name: Installing Check_MK
+- name: Checkmk | Installing
   apt:
     deb: "{{ cmk_url }}"
     state: present
   notify:
     - Restarting Apache2
 
-- name: Getting installed check_mk sites
+- name: Checkmk | Configuring | Getting installed Checkmk sites
   command: "omd sites -b"
   register: cmk_sites
   changed_when: false
 
-- name: Creating check_mk site {{ cmk_site_name }}
+- name: Checkmk | Configuring | Creating Checkmk site {{ cmk_site_name }}
   command: "omd create {{ cmk_site_name }}"
   when: cmk_site_name not in cmk_sites.stdout_lines
   register: cmkdistro_created
 
-- name: Setting default user for site {{ cmk_site_name }}
+- name: Checkmk | Configuring | Setting default user for site {{ cmk_site_name }}
   htpasswd:
     path: /opt/omd/sites/{{ cmk_site_name }}/etc/htpasswd
     name: "{{ cmk_default_user }}"
@@ -26,7 +26,7 @@
     group: "{{ cmk_site_name }}"
     mode: 0640
 
-- name: Creating required directories for user {{ cmk_site_name }}
+- name: Checkmk | Configuring | Creating required directories for user {{ cmk_site_name }}
   file:
     path: "{{ item }}"
     state: directory
@@ -37,34 +37,26 @@
     - /opt/omd/sites/{{ cmk_site_name }}/.ssh
     - /opt/omd/sites/{{ cmk_site_name }}/etc/ipmi-config
 
-- name: Fixing folder permissions
-  file:
-    dest: /opt/omd/sites/{{ cmk_site_name }}/local/lib/nagios/plugins
-    owner: "{{ cmk_site_name }}"
-    group: "{{ cmk_site_name }}"
-    mode: "u=rwX,g=rX,o=rX"
-    recurse: yes
-
-- name: Getting check_mk configuration details
+- name: Checkmk | Configuring | Getting Checkmk configuration details
   omdistro_facts:
     name: "{{ cmk_site_name }}"
 
-- name: Configuring check_mk part 1
+- name: Checkmk | Configuring | Checkmk part 1
   command: omd config {{ cmk_site_name }} set {{ item.name }} {{ item.value }}
   when: omdistro_site_facts[item.name] is defined and omdistro_site_facts[item.name] != item.value
   with_items: "{{ cmk_site_config }}"
   #register: cmkdistro_config1
   notify:
-    - Restarting Check_MK
+    - Restarting Checkmk
 
-- name: Getting check_mk configuration details
+- name: Checkmk | Configuring | Getting check_mk configuration details
   omdistro_facts:
     name: "{{ cmk_site_name }}"
 
-- name: Configuring check_mk part 2
+- name: Checkmk | Configuring | Checkmk part 2
   command: omd config {{ cmk_site_name }} set {{ item.name }} {{ item.value }}
   when: omdistro_site_facts[item.name] is defined and omdistro_site_facts[item.name] != item.value
   with_items: "{{ cmk_site_config }}"
   #register: cmkdistro_config2
   notify:
-    - Restarting Check_MK
+    - Restarting Checkmk

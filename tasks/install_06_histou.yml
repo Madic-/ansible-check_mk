@@ -1,6 +1,6 @@
 ---
 
-- name: Installing php module for apache
+- name: Histou | Installing | php module for apache
   apt:
     name: libapache2-mod-php
     state: present
@@ -8,14 +8,14 @@
   notify:
     - Restarting Apache2
 
-- name: Enabling php module for apache
+- name: Histou | Configuring | Enabling php module for apache
   apache2_module:
     name: php7.2
     state: present
   notify:
     - Restarting Apache2
 
-- name: Downloading and extracting histou
+- name: Histou | Installing | Downloading and extracting histou
   unarchive:
     src: https://github.com/Griesbacher/histou/archive/v{{ cmk_histou_version }}.tar.gz
     dest: /opt
@@ -24,7 +24,7 @@
     remote_src: yes
     creates: /opt/histou-{{ cmk_histou_version }}
 
-- name: Configuring apache2 for histou
+- name: Histou | Configuring | apache2 for histou
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -36,7 +36,7 @@
   notify:
     - Restarting Apache2
 
-- name: Symlinking histou apache2 configuration
+- name: Histou | Configuring | Symlinking histou apache2 configuration
   file:
     src: /etc/apache2/conf-available/histou.conf
     dest: /etc/apache2/conf-enabled/histou.conf
@@ -47,12 +47,12 @@
   notify:
     - Restarting Apache2
 
-- name: Check if histou.js symlink exist
+- name: Histou | Configuring | Check if histou.js symlink exist
   stat:
     path: /usr/share/grafana/public/dashboards/histou.js
   register: histou_symlink
 
-- name: Symlinking histou.js
+- name: Histou | Configuring | Symlinking histou.js
   file:
     src: /opt/histou-{{ cmk_histou_version }}/histou.js
     dest: /usr/share/grafana/public/dashboards/histou.js

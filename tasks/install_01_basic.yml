@@ -1,35 +1,35 @@
 ---
 
-- name: Installing requirements via apt
+- name: Basic | Installing | Packages
   apt:
     name: "{{ cmk_apt_requirements }}"
     state: present
     update_cache: yes
 
-- name: Installing requirements via apt
+- name: Basic | Installing | Ubuntu 20.04 Packages
   apt:
     name: "{{ cmk_apt_requirements_2004 }}"
     state: present
     update_cache: yes
   when: ansible_distribution_version == "20.04"
 
-- name: Installing python requirements
+- name: Basic | Installing | Python dependencies
   pip:
     name: "{{ cmk_python_requirements }}"
 
-- name: Importing apt key for consol labs repo
+- name: Basic | Installing | Importing consol labs apt key
   apt_key:
     url: https://labs.consol.de/repo/stable/RPM-GPG-KEY
     state: present
 
-- name: Adding consol labs stable repo
+- name: Basic | Installing | Adding consol labs stable repo
   apt_repository:
     filename: labs_consol_stable
     repo: "deb http://labs.consol.de/repo/stable/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} main"
     update_cache: no
     state: present
 
-- name: Making sure the man8 folder exists
+- name: Basic | Installing | Making sure the man8 folder exists
   file:
     path: /usr/share/man/man8
     state: directory

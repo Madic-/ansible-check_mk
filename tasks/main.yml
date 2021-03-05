@@ -2,9 +2,9 @@
 
 - name: Including basic setup tasks
   import_tasks: install_01_basic.yml
-  tags: check_mk, thruk, influxdb, grafana
+  tags: check_mk, thruk, influxdb, grafana, gearman
 
-- name: Including Check_MK tasks
+- name: Including Checkmk tasks
   import_tasks: install_02_cmk.yml
   tags: check_mk
 

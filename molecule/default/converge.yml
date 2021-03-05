@@ -1,0 +1,27 @@
+---
+
+- name: Converge
+  hosts: all
+  vars:
+    cmk_site_config:
+      - { name: ADMIN_MAIL,               value: "monitoring@example.com" }
+      - { name: AUTOSTART,                value: "on" }
+      - { name: CORE,                     value: "{{ cmk_monitoring_core }}" }
+      - { name: TMPFS,                    value: "on" }
+      - { name: APACHE_MODE,              value: "own" }
+      - { name: APACHE_TCP_ADDR,          value: "127.0.0.1" }
+      - { name: MULTISITE_AUTHORISATION,  value: "on" }
+      - { name: MULTISITE_COOKIE_AUTH,    value: "on" }
+      - { name: NAGIOS_THEME,             value: "exfoliation" }
+      - { name: MKEVENTD,                 value: "on" }
+      - { name: MKEVENTD_SNMPTRAP,        value: "on" }
+      - { name: MKEVENTD_SYSLOG,          value: "on" }
+      - { name: MKEVENTD_SYSLOG_TCP,      value: "on" }
+      - { name: PNP4NAGIOS,               value: "gearman" }
+      - { name: LIVESTATUS_TCP,           value: "on" }
+      - { name: LIVESTATUS_TCP_ONLY_FROM, value: "0.0.0.0" }
+      - { name: LIVESTATUS_TCP_PORT,      value: "6557" }
+      - { name: NSCA,                     value: "off" }
+
+  roles:
+    - role: Madic-.ansible-check_mk

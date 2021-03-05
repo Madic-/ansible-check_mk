@@ -1,17 +1,17 @@
 ---
 
-- name: Importing Grafana key for the grafana debian repository
+- name: Grafana | Installing | Importing Grafana key for the grafana debian repository
   apt_key:
     url: "https://packages.grafana.com/gpg.key"
 
-- name: Adding Grafana repository
+- name: Grafana | Installing | Adding Grafana repository
   apt_repository:
     filename: grafana_stable
     repo: "deb http://packages.grafana.com/oss/deb stable main"
     update_cache: no
     state: present
 
-- name: Installing Grafana
+- name: Grafana | Installing
   apt:
     name: grafana
     state: present
@@ -19,31 +19,31 @@
   notify:
     - Restarting Grafana
 
-- name: Setting Grafana default username
+- name: Grafana | Configuring | Grafana default username
   replace:
     path: /etc/grafana/grafana.ini
     regexp: ';admin_user = .*'
     replace: 'admin_user = {{ cmk_default_user }}'
 
-- name: Setting Grafana default password
+- name: Grafana | Configuring | Grafana default password
   replace:
     path: /etc/grafana/grafana.ini
     regexp: ';admin_password = .*'
     replace: 'admin_password = {{ cmk_default_password }}'
 
-- name: Setting Grafana root url
+- name: Grafana | Configuring | Grafana root url
   replace:
     path: /etc/grafana/grafana.ini
     regexp: ';root_url = .*'
     replace: 'root_url = %(protocol)s://%(domain)s:%(http_port)s/grafana/'
 
-- name: Bind Grafana to 127.0.0.1
+- name: Grafana | Configuring | Bind Grafana to 127.0.0.1
   replace:
     path: /etc/grafana/grafana.ini
     regexp: ';http_addr ='
     replace: 'http_addr = 127.0.0.1'
 
-- name: Configuring apache2 for grafana
+- name: Grafana | Configuring | apache2 for grafana
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -55,7 +55,7 @@
   notify:
     - Restarting Apache2
 
-- name: Symlinking grafana apache2 configuration
+- name: Grafana | Configuring | Symlinking grafana apache2 configuration
   file:
     src: /etc/apache2/conf-available/grafana.conf
     dest: /etc/apache2/conf-enabled/grafana.conf
@@ -66,7 +66,7 @@
   notify:
     - Restarting Apache2
 
-- name: Creating the grafana provisioning folder
+- name: Grafana | Configuring | Creating the grafana provisioning folder
   file:
     path: /etc/grafana/provisioning/datasources/
     state: directory
@@ -74,7 +74,7 @@
     group: root
     mode: 0755
 
-- name: Provisioning Nagflux database
+- name: Grafana | Configuring | Provisioning database nagflux
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
