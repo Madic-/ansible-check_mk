@@ -32,3 +32,9 @@
     name: influxdb
     state: restarted
     enabled: true
+
+- name: Handler | Restart pnp4nagios_gearman
+  systemd:
+    name: pnp4nagios_gearman
+    state: restarted
+    enabled: true

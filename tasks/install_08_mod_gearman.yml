@@ -96,3 +96,5 @@
     owner: root
     group: root
     mode: 0644
+  notify:
+    - Handler | Restart pnp4nagios_gearman
