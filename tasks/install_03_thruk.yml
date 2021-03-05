@@ -44,3 +44,9 @@
     path: /etc/thruk/cgi.cfg
     owner: www-data
     group: www-data
+
+- name: Thruk | Configuring | Enable performance popup on hover
+  copy:
+    src: /etc/thruk/ssi/status-header.ssi.example
+    dest: /etc/thruk/ssi/status-header.ssi
+    remote_src: true
