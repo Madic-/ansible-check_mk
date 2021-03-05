@@ -5,6 +5,9 @@
   blockinfile:
     path: /etc/apt/preferences
     create: yes
+    owner: root
+    group: root
+    mode: 0644
     block: |
       Package: mod-gearman-module
       Pin: origin "archive.ubuntu.com"
@@ -56,7 +59,7 @@
       # Mod-Gearman NEB Module
       #
       event_broker_options=-1
-      broker_module=/usr/lib/mod_gearman/mod_gearman_nagios3.o config=/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/server.cfg
+      broker_module=/usr/lib/x86_64-linux-gnu/mod_gearman/mod_gearman_nagios3.o config=/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/server.cfg
 
 - name: mod-gearman | Configuring | mod-gearman secretfile
   copy:
