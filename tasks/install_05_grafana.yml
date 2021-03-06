@@ -17,31 +17,21 @@
     state: present
     update_cache: yes
   notify:
-    - Restarting Grafana
+    - Handler | Restart Grafana
 
-- name: Grafana | Configuring | Grafana default username
+- name: Grafana | Configuring
   replace:
     path: /etc/grafana/grafana.ini
-    regexp: ';admin_user = .*'
-    replace: 'admin_user = {{ cmk_default_user }}'
-
-- name: Grafana | Configuring | Grafana default password
-  replace:
-    path: /etc/grafana/grafana.ini
-    regexp: ';admin_password = .*'
-    replace: 'admin_password = {{ cmk_default_password }}'
-
-- name: Grafana | Configuring | Grafana root url
-  replace:
-    path: /etc/grafana/grafana.ini
-    regexp: ';root_url = .*'
-    replace: 'root_url = %(protocol)s://%(domain)s:%(http_port)s/grafana/'
-
-- name: Grafana | Configuring | Bind Grafana to 127.0.0.1
-  replace:
-    path: /etc/grafana/grafana.ini
-    regexp: ';http_addr ='
-    replace: 'http_addr = 127.0.0.1'
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+  with_items:
+    - { regexp: ';admin_user = .*', replace: 'admin_user = {{ cmk_default_user }}' }
+    - { regexp: ';admin_password = .*', replace: 'admin_password = {{ cmk_default_password }}' }
+    - { regexp: ';root_url = .*', replace: 'root_url = %(protocol)s://%(domain)s:%(http_port)s/grafana/' }
+    - { regexp: ';http_addr = .*', replace: 'http_addr = 127.0.0.1' }
+    - { regexp: ';allow_embedding = .*', replace: 'allow_embedding = true' }
+  notify:
+    - Handler | Restart Grafana
 
 - name: Grafana | Configuring | apache2 for grafana
   template:
@@ -84,4 +74,4 @@
   with_items:
     - { src: grafana_datasource.yml.j2, dest: /etc/grafana/provisioning/datasources/influxdb-nagflux.yml }
   notify:
-    - Restarting Grafana
+    - Handler | Restart Grafana

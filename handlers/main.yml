@@ -9,7 +9,7 @@
 - name: Restarting Checkmk
   command: omd restart {{ cmk_site_name }}
 
-- name: Restarting Grafana
+- name: Handler | Restart Grafana
   service:
     name: grafana-server
     state: restarted
