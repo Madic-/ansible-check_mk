@@ -1,19 +1,19 @@
 ---
 
-- name: Histou | Installing | php module for apache
-  apt:
-    name: libapache2-mod-php
-    state: present
-    update_cache: yes
-  notify:
-    - Restarting Apache2
+#- name: Histou | Installing | php module for apache
+#  apt:
+#    name: libapache2-mod-php
+#    state: present
+#    update_cache: yes
+#  notify:
+#    - Restarting Apache2
 
-- name: Histou | Configuring | Enabling php module for apache
-  apache2_module:
-    name: php7.2
-    state: present
-  notify:
-    - Restarting Apache2
+#- name: Histou | Configuring | Enabling php module for apache
+#  apache2_module:
+#    name: php7.2
+#    state: present
+#  notify:
+#    - Restarting Apache2
 
 - name: Histou | Installing | Downloading and extracting histou
   unarchive:
@@ -23,6 +23,27 @@
     group: www-data
     remote_src: yes
     creates: /opt/histou-{{ cmk_histou_version }}
+
+- name: Histou | Configuring | root_url
+  replace:
+    path: /opt/histou-{{ cmk_histou_version }}/histou.js
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+    owner: www-data
+    group: www-data
+    mode: 0664
+    backup: yes
+  with_items:
+    - { regexp: '    var url = .*;', replace: "    var url = '{{ cmk_domain }}/histou/';" }
+
+- name: Histou | Configuring | Enable histou.ini
+  copy:
+    src: /opt/histou-{{ cmk_histou_version }}/histou.ini.example
+    dest: /opt/histou-{{ cmk_histou_version }}/histou.ini
+    remote_src: true
+    owner: www-data
+    group: www-data
+    mode: 0664
 
 - name: Histou | Configuring | apache2 for histou
   template:
@@ -56,7 +77,7 @@
   file:
     src: /opt/histou-{{ cmk_histou_version }}/histou.js
     dest: /usr/share/grafana/public/dashboards/histou.js
-    owner: root
-    group: root
+    owner: www-data
+    group: www-data
     state: link
   when: not histou_symlink.stat.exists

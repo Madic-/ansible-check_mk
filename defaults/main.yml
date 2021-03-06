@@ -2,7 +2,7 @@
 
 cmk_ansible_version: 1.0.0
 
-# Check_MK variables
+# Checkmk variables
 cmk_version: 1.6.0p22
 cmk_site_name: cmk
 cmk_apt_requirements:
@@ -50,8 +50,11 @@ cmk_site_config:
   - { name: LIVESTATUS_TCP,           value: "off" }
   - { name: LIVESTATUS_TCP_ONLY_FROM, value: "0.0.0.0" }
   - { name: LIVESTATUS_TCP_PORT,      value: "6557" }
+  - { name: LIVESTATUS_TCP_TLS,       value: "off" }
   - { name: NSCA,                     value: "off" }
 cmk_url: "https://download.checkmk.com/checkmk/{{ cmk_version }}/check-mk-raw-{{ cmk_version }}_0.{{ ansible_distribution_release }}_amd64.deb"
+
+cmk_domain: "http://{{ ansible_nodename }}"
 
 # Thruk variables
 cmk_thruk_menu: |
@@ -64,7 +67,7 @@ cmk_influxdb_nagflux_user: nagflux
 cmk_influxdb_nagflux_password: nagflux
 
 # Grafana
-cmk_grafana_datasource_name: influxdb-nagflux-{{ cmk_influxdb_nagflux_name }}
+cmk_grafana_datasource_name: influxdb-{{ cmk_influxdb_nagflux_name }}
 
 # Histou
 # https://github.com/Griesbacher/histou/releases

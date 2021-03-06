@@ -1,0 +1,29 @@
+---
+# histou requires< <= php7.1...
+
+- name: PHP | Installing | Importing custom repository apt key
+  apt_key:
+    url: https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x14aa40ec0831756756d7f66c4f4ea0aae5267a6c
+    state: present
+
+- name: PHP | Installing | Adding custom repository
+  apt_repository:
+    filename: ondrej-ubuntu-php-{{ ansible_distribution_release }}.list
+    repo: "deb http://ppa.launchpad.net/ondrej/php/ubuntu {{ ansible_distribution_release }} main"
+    update_cache: yes
+    state: present
+
+- name: PHP | Installing | php module for apache
+  apt:
+    name: libapache2-mod-php7.1
+    state: present
+    update_cache: yes
+  notify:
+    - Restarting Apache2
+
+- name: PHP | Configuring | Enabling php module for apache
+  apache2_module:
+    name: php7.1
+    state: present
+  notify:
+    - Restarting Apache2
