@@ -1,6 +1,6 @@
 # Ansible Checkmk
 
-[![Maintenance](https://img.shields.io/maintenance/yes/2021.svg)](https://github.com/Madic-/ansible-check_mk) [![Build Status](https://travis-ci.org/Madic-/ansible-check_mk.svg?branch=master)](https://travis-ci.org/Madic-/ansible-check_mk)
+[![Maintenance](https://img.shields.io/maintenance/yes/2021.svg)](https://github.com/Madic-/ansible-check_mk)
 
 The intention of this ansible role is to replicate some of the functionality from the [OMD](https://labs.consol.de/de/omd/) v2.X packages with focus on Checkmk RAW Edition. OMD hasn't updated Checkmk in years and finally removed it from version 3. So this role is going to install the following tools and pre-configure them:
 
