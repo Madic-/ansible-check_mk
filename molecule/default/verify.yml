@@ -1,0 +1,74 @@
+---
+
+- hosts: all
+
+  tasks:
+    - name: Check if apache2 is enabled
+      command: systemctl is-enabled apache2
+      register: command_result
+      failed_when: "'disabled' in command_result.stdout"
+
+    - name: Check if thruk is enabled
+      command: systemctl is-enabled thruk
+      register: command_result
+      failed_when: "'disabled' in command_result.stdout"
+
+    - name: Check if influxdb is enabled
+      command: systemctl is-enabled influxdb
+      register: command_result
+      failed_when: "'disabled' in command_result.stdout"
+
+    - name: Check if grafana is enabled
+      command: systemctl is-enabled grafana-server
+      register: command_result
+      failed_when: "'disabled' in command_result.stdout"
+
+    - name: Check if nagflux is enabled
+      command: systemctl is-enabled nagflux
+      register: command_result
+      failed_when: "'disabled' in command_result.stdout"
+
+    - name: Check if pnp4nagios_gearman is enabled
+      command: systemctl is-enabled pnp4nagios_gearman
+      register: command_result
+      failed_when: "'disabled' in command_result.stdout"
+
+    - name: Check if gearman-job-server is enabled
+      command: systemctl is-enabled gearman-job-server
+      register: command_result
+      failed_when: "'disabled' in command_result.stdout"
+
+    - name: Check if apache2 is running
+      shell: "systemctl status apache2 | grep -i running"
+      register: status
+      failed_when: status.rc != 0
+
+    - name: Check if thruk is running
+      shell: "/etc/init.d/thruk status | grep -i running"
+      register: status
+      failed_when: status.rc != 0
+
+    - name: Check if influxdb is running
+      shell: "systemctl status influxdb | grep -i running"
+      register: status
+      failed_when: status.rc != 0
+
+    - name: Check if grafana is running
+      shell: "systemctl status grafana-server | grep -i running"
+      register: status
+      failed_when: status.rc != 0
+
+    - name: Check if nagflux is running
+      shell: "systemctl status nagflux | grep -i running"
+      register: status
+      failed_when: status.rc != 0
+
+    - name: Check if pnp4nagios_gearman is running
+      shell: "systemctl status pnp4nagios_gearman | grep -i running"
+      register: status
+      failed_when: status.rc != 0
+
+    - name: Check if gearman-job-server is running
+      shell: "systemctl status gearman-job-server | grep -i running"
+      register: status
+      failed_when: status.rc != 0

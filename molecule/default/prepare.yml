@@ -1,0 +1,11 @@
+---
+
+- hosts: all
+
+  tasks:
+    - name: Preparing | Installing | Packages
+      apt:
+        name:
+          - nano
+        update_cache: yes
+        state: present
