@@ -2,11 +2,11 @@
 
 - name: Including basic setup tasks
   import_tasks: install_01_basic.yml
-  tags: check_mk, thruk, influxdb, grafana, gearman
+  tags: checkmk, thruk, influxdb, grafana, gearman
 
 - name: Including Checkmk tasks
   import_tasks: install_02_cmk.yml
-  tags: check_mk
+  tags: checkmk
 
 - name: Including Thruk installation tasks
   import_tasks: install_03_thruk.yml
@@ -32,17 +32,21 @@
   import_tasks: install_08_mod_gearman.yml
   tags: gearman
 
+- name: Including php installation tasks
+  import_tasks: install_09_php.yml
+  tags: php
+
 - name: Flush handlers
   meta: flush_handlers
-  tags: check_mk, thruk, grafana, gearman
+  tags: checkmk, thruk, grafana, gearman
 
 - name: Informational Output
   debug:
     msg:
       - ""
-      - "Check_MK URL: http://{{ inventory_hostname }}/{{ cmk_site_name }}/check_mk"
+      - "Checkmk URL: http://{{ inventory_hostname }}/{{ cmk_site_name }}/check_mk"
       - "Thruk URL: http://{{ inventory_hostname }}/thruk"
       - "Grafana URL: http://{{ inventory_hostname }}/grafana"
       - "Default user: {{ cmk_default_user }}"
       - "Default password: {{ cmk_default_password }}"
-  tags: check_mk, thruk, grafana
+  tags: checkmk, thruk, grafana

@@ -5,7 +5,7 @@
 The intention of this ansible role is to replicate some of the functionality from the [OMD](https://labs.consol.de/de/omd/) v2.X packages with focus on Checkmk RAW Edition. OMD hasn't updated Checkmk in years and finally removed it from version 3. So this role is going to install the following tools and pre-configure them:
 
 * [x] [Checkmk RAW Edition](https://mathias-kettner.de)
-  * [ ] Checkmk Master / Slave Configuration
+  * [ ] Checkmk Master / Slave Configuration (optional)
   * [ ] Dual Graphing pnp4nagios and InfluxDB/Grafana
 * [x] [Mod-Gearman](https://mod-gearman.org/)
 * [x] [Thruk](https://www.thruk.org)

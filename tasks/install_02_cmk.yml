@@ -49,7 +49,7 @@
   notify:
     - Restarting Checkmk
 
-- name: Checkmk | Configuring | Getting check_mk configuration details
+- name: Checkmk | Configuring | Getting Checkmk configuration details
   omdistro_facts:
     name: "{{ cmk_site_name }}"
 
@@ -60,3 +60,13 @@
   #register: cmkdistro_config2
   notify:
     - Restarting Checkmk
+
+- name: Checkmk | Configuring | Enable grafana action_urls
+  replace:
+    path: "/opt/omd/sites/{{ cmk_site_name }}/etc/nagios/conf.d/check_mk_templates.cfg"
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+    backup: yes
+  with_items:
+    - { regexp: ".*\\/{{ cmk_site_name }}\\/pnp4nagios\\/index\\.php\\/graph\\?host=\\$HOSTNAME\\$&srv=_HOST_.*", replace: "  action_url                      /grafana/dashboard/script/histou.js?host=$HOSTNAME$&theme=light&annotations=true" }
+    - { regexp: ".*\\/{{ cmk_site_name }}\\/pnp4nagios\\/index\\.php\\/graph\\?host=\\$HOSTNAME\\$&srv=\\$SERVICEDESC\\$.*", replace: "  action_url                      /grafana/dashboard/script/histou.js?host=$HOSTNAME$&service=$SERVICEDESC$&theme=light&annotations=true" }
