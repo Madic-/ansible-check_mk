@@ -50,3 +50,6 @@
     src: /etc/thruk/ssi/status-header.ssi.example
     dest: /etc/thruk/ssi/status-header.ssi
     remote_src: true
+    owner: root
+    group: root
+    mode: 0644
