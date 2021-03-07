@@ -7,5 +7,6 @@
       apt:
         name:
           - nano
+          - net-tools
         update_cache: yes
         state: present
