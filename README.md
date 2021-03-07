@@ -6,8 +6,9 @@ The intention of this ansible role is to replicate some of the functionality fro
 
 * [x] [Checkmk RAW Edition](https://mathias-kettner.de)
   * [ ] Checkmk Master / Slave Configuration (optional)
-  * [ ] Dual Graphing pnp4nagios and InfluxDB/Grafana
-* [x] [Mod-Gearman](https://mod-gearman.org/)
+  * [x] Dual Graphing pnp4nagios and InfluxDB/Grafana
+* [x] [Mod-Gearman](https://mod-gearman.org/)docker
+  * [x] Gearman Job Server
 * [x] [Thruk](https://www.thruk.org)
   * [x] Granting default Checkmk User administrative permission
   * [x] Pre-configuring Checkmk Site in Thruk
@@ -63,18 +64,10 @@ Provisioning file for the nagflux database.
 
 By default no user, except for the user created through this role, has permissions to access any information from within Thruk. To give another user permissions use the Config Tool --> "User Settings" or "CGI & Access" options.
 
-## Tests
+## Container image
 
-It's possible to test the role against a docker container. The provided test script must be run from the root of the role. By providing environment variables you can slightly modify the behaviour of the script.
+At first I intended to also provide a container, e.g. docker, image. But this role has so many moving parts and dependencies that it would take huge effort to create one or multiple images. Though I'm not reluctant if someone would work on it and would support it. At the moment I'm deploying it in LXC Containers.
 
-    DISTRO=debian9 ./tests/test.sh
-    APT_CACHER_ENABLED=true APT_CACHER_URL=http://10.59.100.229:3142/ CLEANUP=false ./tests/test.sh
+## Credits
 
-The following environment variables are availables:
-
-| Variable           | Values                     | Usage                                                         |
-| ------------------ | -------------------------- | ------------------------------------------------------------- |
-| APT_CACHER_ENABLED | true<br>**false**          | Enable apt-cacher-ng usage                                    |
-| APT_CACHER_URL     | http://apt-cacher-ng:3142/ | URL to the apt-cacher-ng proxy                                |
-| CLEANUP            | **true**<br>false          | Should the docker container at the end be stopped and removed |
-| DISTRO             | **ubuntu1804**<br>debian9  | Distribution to test against                                  |
+Special thanks goes out to the people from [Consol](https://www.consol.de/). Without their work this role wouldn't be possible.
