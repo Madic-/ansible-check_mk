@@ -30,7 +30,7 @@ cmk_python_requirements:
   - python3-netsnmp
 cmk_default_user: cmkadmin
 cmk_default_password: cmk
-# Allowed values: nagios, icinga
+# Allowed values: nagios, none. icinga isn't supported anymore
 cmk_monitoring_core: nagios
 cmk_site_config:
   - { name: ADMIN_MAIL,               value: "cmk@example.com" }
@@ -65,6 +65,8 @@ cmk_thruk_menu: |
 cmk_influxdb_nagflux_name: nagflux
 cmk_influxdb_nagflux_user: nagflux
 cmk_influxdb_nagflux_password: nagflux
+cmk_influxdb_hostname: "{{ ansible_hostname }}"
+cmk_influx_bind_address: 127.0.0.1:8086
 
 # Grafana
 cmk_grafana_datasource_name: influxdb-{{ cmk_influxdb_nagflux_name }}

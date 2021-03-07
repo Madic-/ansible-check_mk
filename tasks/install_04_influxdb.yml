@@ -23,9 +23,12 @@
 - name: InfluxDB | Configuring | Modifing InfluxDB hostname
   replace:
     dest: /etc/influxdb/influxdb.conf
-    regexp: 'hostname = "localhost"'
-    replace: 'hostname = "{{ ansible_hostname }}"'
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
     backup: yes
+  with_items:
+    - { regexp: 'hostname = "localhost"', replace: 'hostname = "{{ cmk_influxdb_hostname }}"' }
+    - { regexp: '  # bind-address = ":8086"', replace: '  bind-address = "{{ cmk_influx_bind_address }}"' }
   notify:
     - Handler | Restarting Influxdb
 
