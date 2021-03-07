@@ -1,20 +1,5 @@
 ---
 
-#- name: Histou | Installing | php module for apache
-#  apt:
-#    name: libapache2-mod-php
-#    state: present
-#    update_cache: yes
-#  notify:
-#    - Restarting Apache2
-
-#- name: Histou | Configuring | Enabling php module for apache
-#  apache2_module:
-#    name: php7.2
-#    state: present
-#  notify:
-#    - Restarting Apache2
-
 - name: Histou | Installing | Downloading and extracting histou
   unarchive:
     src: https://github.com/Griesbacher/histou/archive/v{{ cmk_histou_version }}.tar.gz
@@ -55,7 +40,7 @@
   with_items:
     - { src: histou_apache2.conf.j2, dest: /etc/apache2/conf-available/histou.conf }
   notify:
-    - Restarting Apache2
+    - Handler | Restart Apache2
 
 - name: Histou | Configuring | Symlinking histou apache2 configuration
   file:
@@ -66,7 +51,7 @@
     group: root
     state: link
   notify:
-    - Restarting Apache2
+    - Handler | Restart Apache2
 
 - name: Histou | Configuring | Check if histou.js symlink exist
   stat:

@@ -5,7 +5,7 @@
     deb: "{{ cmk_url }}"
     state: present
   notify:
-    - Restarting Apache2
+    - Handler | Restart Apache2
 
 - name: Checkmk | Configuring | Getting installed Checkmk sites
   command: "omd sites -b"
@@ -47,7 +47,7 @@
   with_items: "{{ cmk_site_config }}"
   #register: cmkdistro_config1
   notify:
-    - Restarting Checkmk
+    - Handler | Restart Checkmk
 
 - name: Checkmk | Configuring | Getting Checkmk configuration details
   omdistro_facts:
@@ -59,7 +59,7 @@
   with_items: "{{ cmk_site_config }}"
   #register: cmkdistro_config2
   notify:
-    - Restarting Checkmk
+    - Handler | Restart Checkmk
 
 - name: Checkmk | Configuring | Enable grafana action_urls
   replace:

@@ -1,12 +1,12 @@
 ---
 
-- name: Restarting Apache2
+- name: Handler | Restart Apache2
   service:
     name: apache2
     state: restarted
     enabled: true
 
-- name: Restarting Checkmk
+- name: Handler | Restart Checkmk
   command: omd restart {{ cmk_site_name }}
 
 - name: Handler | Restart Grafana
@@ -15,13 +15,13 @@
     state: restarted
     enabled: true
 
-- name: Restarting Nagflux
+- name: Handler | Restart Nagflux
   service:
     name: nagflux
     state: restarted
     enabled: true
 
-- name: Restarting Thruk
+- name: Handler | Restart Thruk
   service:
     name: thruk
     state: restarted

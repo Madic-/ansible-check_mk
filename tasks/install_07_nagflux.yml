@@ -30,4 +30,4 @@
     - { src: nagflux_config.gcfg.j2, dest: /etc/nagflux/config.gcfg, owner: "{{ cmk_site_name }}", group: "{{ cmk_site_name }}", mode: "0644" }
     - { src: nagflux_init.j2, dest: /etc/init.d/nagflux, owner: root, group: root, mode: "0755" }
   notify:
-    - Restarting Nagflux
+    - Handler | Restart Nagflux

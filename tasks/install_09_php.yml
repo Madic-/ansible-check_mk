@@ -19,11 +19,11 @@
     state: present
     update_cache: yes
   notify:
-    - Restarting Apache2
+    - Handler | Restart Apache2
 
 - name: PHP | Configuring | Enabling php module for apache
   apache2_module:
     name: php7.1
     state: present
   notify:
-    - Restarting Apache2
+    - Handler | Restart Apache2

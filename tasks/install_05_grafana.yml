@@ -43,7 +43,7 @@
   with_items:
     - { src: grafana_apache2.conf.j2, dest: /etc/apache2/conf-available/grafana.conf }
   notify:
-    - Restarting Apache2
+    - Handler | Restart Apache2
 
 - name: Grafana | Configuring | Symlinking grafana apache2 configuration
   file:
@@ -54,7 +54,7 @@
     group: root
     state: link
   notify:
-    - Restarting Apache2
+    - Handler | Restart Apache2
 
 - name: Grafana | Configuring | Creating the grafana provisioning folder
   file:
