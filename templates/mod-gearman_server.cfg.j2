@@ -21,7 +21,7 @@ debug=0
 logfile=/opt/omd/sites/{{ cmk_site_name }}/var/log/gearman/neb.log
 
 # On which port is gearman listening
-server=localhost:4730
+server=127.0.0.1:4730
 
 # sets the address of your 2nd (duplicate) gearman job server. Can
 # be specified more than once o add more servers.
@@ -153,8 +153,7 @@ result_workers=1
 # queue and not further processed.
 # You can specify multiple queues by comma separated list.
 # Default: no
-perfdata=yes
-perfdata=grafana_data
+perfdata=yes,grafana_data
 
 # Set perfdata_send_all=yes to submit all performance data
 # of all hosts and services regardless of if they
