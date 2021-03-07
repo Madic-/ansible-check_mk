@@ -39,6 +39,23 @@
       #- libgearman7
     state: present
     update_cache: yes
+  notify:
+    - Handler | Restart gearman-job-server
+
+# Crashes in molecule test if not 127.0.0.1
+- name: gearmand | Configuring | listen address
+  replace:
+    path: /etc/default/gearman-job-server
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+    owner: www-data
+    group: www-data
+    mode: 0664
+    backup: yes
+  with_items:
+    - { regexp: 'PARAMS="--listen=localhost \\', replace: 'PARAMS="--listen=127.0.0.1 \\' }
+  notify:
+    - Handler | Restart gearman-job-server
 
 - name: mod-gearman | Configuring | Creating required mod-gearman directories
   file:
@@ -51,18 +68,17 @@
     - /opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman
     - /opt/omd/sites/{{ cmk_site_name }}/var/log/gearman
 
-- name: mod-gearman | Configuring | mod-gearman.cfg
-  copy:
-    dest: /opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/mod-gearman.cfg
+- name: mod-gearman | Configuring | Templating nagios integration
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
     owner: "{{ cmk_site_name }}"
     group: "{{ cmk_site_name }}"
     mode: 0644
-    content: |
-      #
-      # Mod-Gearman NEB Module
-      #
-      event_broker_options=-1
-      broker_module=/usr/lib/mod_gearman/mod_gearman.o config=/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/server.cfg
+  with_items:
+    - { src: perfdata.cfg.j2, dest: "/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/perfdata.cfg" }
+    - { src: mod-gearman_server.cfg.j2, dest: "/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/server.cfg" }
+    - { src: mod-gearman.cfg.j2, dest: "/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/mod-gearman.cfg" }
   notify:
     - Handler | Restart Checkmk
 
@@ -75,21 +91,16 @@
     content: |
       {{ cmk_mod_gearman_secret }}
 
-- name: mod-gearman | Configuring | Linking mod-gearman.cfg to nagios.d
+- name: mod-gearman | Configuring | Linking mod-gearman settings into nagios.d
   file:
-    src: /opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/mod-gearman.cfg
-    dest: /opt/omd/sites/{{ cmk_site_name }}/etc/nagios/nagios.d/mod-gearman.cfg
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
     owner: "{{ cmk_site_name }}"
     group: "{{ cmk_site_name }}"
     state: link
-
-- name: mod-gearman | Configuring | mod-gearman server.cfg
-  template:
-    src: mod-gearman_server.cfg.j2
-    dest: /opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/server.cfg
-    owner: "{{ cmk_site_name }}"
-    group: "{{ cmk_site_name }}"
-    mode: 0644
+  with_items:
+    - { src: "/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/mod-gearman.cfg", dest: "/opt/omd/sites/{{ cmk_site_name }}/etc/nagios/nagios.d/mod-gearman.cfg" }
+    - { src: "/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/perfdata.cfg", dest: "/opt/omd/sites/{{ cmk_site_name }}/etc/nagios/nagios.d/perfdata.cfg" }
   notify:
     - Handler | Restart Checkmk
 
@@ -102,25 +113,3 @@
     mode: 0644
   notify:
     - Handler | Restart pnp4nagios_gearman
-
-- name: mod-gearman | Configuring | Templating host / service file processing command
-  template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    owner: "{{ item.owner }}"
-    group: "{{ item.group }}"
-    mode: "{{ item.mode }}"
-  with_items:
-    - { src: perfdata.cfg.j2, dest: "/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/perfdata.cfg", owner: "{{ cmk_site_name }}", group: "{{ cmk_site_name }}", mode: "0755" }
-  notify:
-    - Handler | Restart Checkmk
-
-- name: mod-gearman | Configuring | Linking host / service file processing command
-  file:
-    src: /opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/perfdata.cfg
-    dest: /opt/omd/sites/{{ cmk_site_name }}/etc/nagios/nagios.d/perfdata.cfg
-    owner: "{{ cmk_site_name }}"
-    group: "{{ cmk_site_name }}"
-    state: link
-  notify:
-    - Handler | Restart Checkmk

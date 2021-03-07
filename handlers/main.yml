@@ -38,3 +38,9 @@
     name: pnp4nagios_gearman
     state: restarted
     enabled: true
+
+- name: Handler | Restart gearman-job-server
+  systemd:
+    name: gearman-job-server
+    state: restarted
+    enabled: true
