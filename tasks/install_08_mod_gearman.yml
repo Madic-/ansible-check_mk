@@ -63,6 +63,8 @@
       #
       event_broker_options=-1
       broker_module=/usr/lib/mod_gearman/mod_gearman.o config=/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/server.cfg
+  notify:
+    - Handler | Restart Checkmk
 
 - name: mod-gearman | Configuring | mod-gearman secretfile
   copy:
@@ -88,6 +90,8 @@
     owner: "{{ cmk_site_name }}"
     group: "{{ cmk_site_name }}"
     mode: 0644
+  notify:
+    - Handler | Restart Checkmk
 
 - name: mod-gearman | Configuring | pnp4nagios gearman worker systemd unit
   template:
@@ -98,3 +102,25 @@
     mode: 0644
   notify:
     - Handler | Restart pnp4nagios_gearman
+
+- name: mod-gearman | Configuring | Templating host / service file processing command
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+  with_items:
+    - { src: perfdata.cfg.j2, dest: "/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/perfdata.cfg", owner: "{{ cmk_site_name }}", group: "{{ cmk_site_name }}", mode: "0755" }
+  notify:
+    - Handler | Restart Checkmk
+
+- name: mod-gearman | Configuring | Linking host / service file processing command
+  file:
+    src: /opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/perfdata.cfg
+    dest: /opt/omd/sites/{{ cmk_site_name }}/etc/nagios/nagios.d/perfdata.cfg
+    owner: "{{ cmk_site_name }}"
+    group: "{{ cmk_site_name }}"
+    state: link
+  notify:
+    - Handler | Restart Checkmk
