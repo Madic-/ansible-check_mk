@@ -28,7 +28,7 @@
     - { regexp: ';admin_user = .*', replace: 'admin_user = {{ cmk_default_user }}' }
     - { regexp: ';admin_password = .*', replace: 'admin_password = {{ cmk_default_password }}' }
     - { regexp: ';root_url = .*', replace: 'root_url = %(protocol)s://%(domain)s:%(http_port)s/grafana/' }
-    - { regexp: ';http_addr = .*', replace: 'http_addr = 127.0.0.1' }
+    - { regexp: ';http_addr =', replace: 'http_addr = 127.0.0.1' }
     - { regexp: ';allow_embedding = .*', replace: 'allow_embedding = true' }
   notify:
     - Handler | Restart Grafana
