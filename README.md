@@ -18,12 +18,16 @@ The intention of this ansible role is to replicate some of the functionality fro
 * [x] [InfluxDB](https://www.influxdata.com)
   * [x] Pre-configuring Nagflux database
 * [x] [Nagflux](https://github.com/Griesbacher/nagflux)
+* [ ] Single-Sign on for Checkmk / Thruk / Grafana (maybe [dex](https://github.com/dexidp/dex)?)
+
+With these tools installed Checkmk writes all performance data as pnp4nagios rrd graphs, viewable within Wato, and into an influxdb, viewable as Grafana graph template within Thruk. The data within influxdb can also be used to create custom dashboards within Grafana.
 
 I assume you have a process in place to configure apache2 with a valid TLS configuration because by default all WebUIs are only accessible via http. A valid TLS configuration is out of scope of this role.
 
 ## Supported Operating Systems
 
 * Ubuntu 20.04
+* Ubuntu 18.04
 
 ## Role Variables
 

@@ -20,7 +20,7 @@ cmk_apt_requirements:
   - python3-setuptools
   - python3-pip
   - libsnmp-dev
-cmk_apt_requirements_2004:
+cmk_apt_requirements_ubuntu:
   - snmpd
   - python3-pip
   - python3-passlib

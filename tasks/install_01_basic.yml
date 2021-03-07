@@ -6,12 +6,12 @@
     state: present
     update_cache: yes
 
-- name: Basic | Installing | Ubuntu 20.04 Packages
+- name: Basic | Installing | Ubuntu Packages
   apt:
-    name: "{{ cmk_apt_requirements_2004 }}"
+    name: "{{ cmk_apt_requirements_ubuntu }}"
     state: present
     update_cache: yes
-  when: ansible_distribution_version == "20.04"
+  when: ansible_distribution == "Ubuntu"
 
 - name: Basic | Installing | Python dependencies
   pip:
