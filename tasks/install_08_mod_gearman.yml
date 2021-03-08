@@ -1,18 +1,19 @@
 ---
 
-# force mod-gearman-module from distribution repository
-- name: mod-gearman | Installing | Templating apt preferences for Ubuntu
-  blockinfile:
-    path: /etc/apt/preferences
-    create: yes
-    owner: root
-    group: root
-    mode: 0644
-    block: |
-      Package: mod-gearman-module
-      Pin: origin "archive.ubuntu.com"
-      Pin-Priority: 999
-    marker: "## {mark} ANSIBLE CHECKMK MANAGED BLOCK"
+- block:
+    # force mod-gearman-module from distribution repository
+    - name: mod-gearman | Installing | Templating apt preferences for Ubuntu
+      blockinfile:
+        path: /etc/apt/preferences
+        create: yes
+        owner: root
+        group: root
+        mode: 0644
+        block: |
+          Package: mod-gearman-module
+          Pin: origin "archive.ubuntu.com"
+          Pin-Priority: 999
+        marker: "## {mark} ANSIBLE CHECKMK MANAGED BLOCK"
   when: ansible_distribution == "Ubuntu"
 
 # mod-gearman-module from console repository requires naemon user / group...
@@ -28,19 +29,21 @@
 #    name: naemon
 #    group: naemon
 
-- name: mod-gearman | Installing
-  apt:
-    name:
-      - gearman
-      - mod-gearman-module
-      - mod-gearman-tools
-      - libgearman-client-perl
-      - libcrypt-rijndael-perl
-      #- libgearman7
-    state: present
-    update_cache: yes
-  notify:
-    - Handler | Restart gearman-job-server
+- block:
+    - name: mod-gearman | Installing
+      apt:
+        name:
+          - gearman
+          - mod-gearman-module
+          - mod-gearman-tools
+          - libgearman-client-perl
+          - libcrypt-rijndael-perl
+          #- libgearman7
+        state: present
+        update_cache: yes
+      notify:
+        - Handler | Restart gearman-job-server
+  when: ansible_os_family == "Debian"
 
 # Crashes in molecule test if not 127.0.0.1
 - name: gearmand | Configuring | listen address

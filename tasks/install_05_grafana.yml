@@ -1,23 +1,25 @@
 ---
 
-- name: Grafana | Installing | Importing Grafana key for the grafana debian repository
-  apt_key:
-    url: "https://packages.grafana.com/gpg.key"
+- block:
+    - name: Grafana | Installing | Importing Grafana key for the grafana debian repository
+      apt_key:
+        url: "https://packages.grafana.com/gpg.key"
 
-- name: Grafana | Installing | Adding Grafana repository
-  apt_repository:
-    filename: grafana_stable
-    repo: "deb http://packages.grafana.com/oss/deb stable main"
-    update_cache: no
-    state: present
+    - name: Grafana | Installing | Adding Grafana repository
+      apt_repository:
+        filename: grafana_stable
+        repo: "deb http://packages.grafana.com/oss/deb stable main"
+        update_cache: no
+        state: present
 
-- name: Grafana | Installing
-  apt:
-    name: grafana
-    state: present
-    update_cache: yes
-  notify:
-    - Handler | Restart Grafana
+    - name: Grafana | Installing
+      apt:
+        name: grafana
+        state: present
+        update_cache: yes
+      notify:
+        - Handler | Restart Grafana
+  when: ansible_os_family == "Debian"
 
 - name: Grafana | Replace Unicode character for ini_file module
   replace:

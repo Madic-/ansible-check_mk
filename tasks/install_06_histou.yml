@@ -30,28 +30,30 @@
     group: www-data
     mode: 0664
 
-- name: Histou | Configuring | apache2 for histou
-  template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    owner: root
-    group: root
-    mode: 0644
-  with_items:
-    - { src: histou_apache2.conf.j2, dest: /etc/apache2/conf-available/histou.conf }
-  notify:
-    - Handler | Restart Apache2
+- block:
+    - name: Histou | Configuring | apache2 for histou
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0644
+      with_items:
+        - { src: histou_apache2.conf.j2, dest: /etc/apache2/conf-available/histou.conf }
+      notify:
+        - Handler | Restart Apache2
 
-- name: Histou | Configuring | Symlinking histou apache2 configuration
-  file:
-    src: /etc/apache2/conf-available/histou.conf
-    dest: /etc/apache2/conf-enabled/histou.conf
-    force: yes
-    owner: root
-    group: root
-    state: link
-  notify:
-    - Handler | Restart Apache2
+    - name: Histou | Configuring | Symlinking histou apache2 configuration
+      file:
+        src: /etc/apache2/conf-available/histou.conf
+        dest: /etc/apache2/conf-enabled/histou.conf
+        force: yes
+        owner: root
+        group: root
+        state: link
+      notify:
+        - Handler | Restart Apache2
+  when: ansible_os_family == "Debian"
 
 - name: Histou | Configuring | Check if histou.js symlink exist
   stat:

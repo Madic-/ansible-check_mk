@@ -1,17 +1,75 @@
 ---
 
-- name: Thruk | Installing
-  apt:
-    name: thruk
-    state: present
-    update_cache: yes
+- block:
+    - name: Thruk | Installing
+      apt:
+        name: thruk
+        state: present
+        update_cache: yes
 
-- name: Thruk | Configuring | Enabling headers module for apache
-  apache2_module:
-    name: headers
-    state: present
-  notify:
-    - Handler | Restart Apache2
+    - name: Thruk | Configuring | Enabling headers module for apache
+      apache2_module:
+        name: headers
+        state: present
+      notify:
+        - Handler | Restart Apache2
+
+    - name: Thruk | Configuring | Apache2 config
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: www-data
+        group: www-data
+        mode: 0644
+      with_items:
+        - { src: thruk_auth.conf.j2, dest: /etc/apache2/conf-available/thruk_auth.conf }
+      notify:
+        - Handler | Restart Apache2
+
+    - name: Thruk | Configuring | Symlinking apache authentication
+      file:
+        src: /etc/apache2/conf-available/thruk_auth.conf
+        dest: /etc/apache2/conf-enabled/thruk_auth.conf
+        force: yes
+        state: link
+      notify:
+        - Handler | Restart Apache2
+
+    - name: Thruk | Configuring | Removing cookie auth config file
+      file:
+        path: /etc/apache2/conf-enabled/thruk_cookie_auth_vhost.conf
+        state: absent
+      notify:
+        - Handler | Restart Apache2
+
+    - name: Thruk | Configuring | Check if apache2 000-default.conf exists
+      stat:
+        path: /etc/apache2/sites-enabled/000-default.conf
+      register: apache2_default
+
+    - name: Thruk | Configuring | Check if apache2 default-ssl.conf exists
+      stat:
+        path: /etc/apache2/sites-enabled/default-ssl.conf
+      register: apache2_default_ssl
+
+    - name: Thruk | Configuring | Disabling http cookie auth
+      replace:
+        path: /etc/apache2/sites-enabled/000-default.conf
+        regexp: '.*Include /usr/share/thruk/thruk_cookie_auth.include'
+        replace: '    #Include /usr/share/thruk/thruk_cookie_auth.include'
+      when: apache2_default.stat.exists
+      notify:
+        - Handler | Restart Apache2
+
+    - name: Thruk | Configuring | Disabling http cookie auth
+      replace:
+        path: /etc/apache2/sites-enabled/default-ssl.conf
+        regexp: '.*Include /usr/share/thruk/thruk_cookie_auth.include'
+        replace: '    #Include /usr/share/thruk/thruk_cookie_auth.include'
+      when: apache2_default_ssl.stat.exists
+      notify:
+        - Handler | Restart Apache2
+  when: ansible_os_family == "Debian"
 
 - name: Thruk | Configuring
   template:
@@ -23,9 +81,7 @@
   with_items:
     - { src: thruk_config.conf.j2, dest: /etc/thruk/thruk_local.d/thruk_ansible.conf }
     - { src: thruk_menu.conf.j2, dest: /etc/thruk/menu_local.conf }
-    - { src: thruk_auth.conf.j2, dest: /etc/apache2/conf-available/thruk_auth.conf }
   notify:
-    - Handler | Restart Apache2
     - Handler | Restart Thruk
 
 - name: Thruk | Configuring | Checking Thruks htpasswd file
@@ -41,22 +97,6 @@
     state: link
   when: not thrukpasswd.stat.islnk
 
-- name: Thruk | Configuring | Symlinking apache authentication
-  file:
-    src: /etc/apache2/conf-available/thruk_auth.conf
-    dest: /etc/apache2/conf-enabled/thruk_auth.conf
-    force: yes
-    state: link
-  notify:
-    - Handler | Restart Apache2
-
-- name: Thruk | Configuring | Removing cookie auth config file
-  file:
-    path: /etc/apache2/conf-enabled/thruk_cookie_auth_vhost.conf
-    state: absent
-  notify:
-    - Handler | Restart Apache2
-
 - name: Thruk | Configuring | Disabling basic auth
   replace:
     path: /etc/thruk/thruk.conf
@@ -64,34 +104,6 @@
     replace: '    #htpasswd = /etc/thruk/htpasswd'
   notify:
     - Handler | Restart Thruk
-
-- name: Thruk | Configuring | Check if apache2 000-default.conf exists
-  stat:
-    path: /etc/apache2/sites-enabled/000-default.conf
-  register: apache2_default
-
-- name: Thruk | Configuring | Check if apache2 default-ssl.conf exists
-  stat:
-    path: /etc/apache2/sites-enabled/default-ssl.conf
-  register: apache2_default_ssl
-
-- name: Thruk | Configuring | Disabling http cookie auth
-  replace:
-    path: /etc/apache2/sites-enabled/000-default.conf
-    regexp: '.*Include /usr/share/thruk/thruk_cookie_auth.include'
-    replace: '    #Include /usr/share/thruk/thruk_cookie_auth.include'
-  when: apache2_default.stat.exists
-  notify:
-    - Handler | Restart Apache2
-
-- name: Thruk | Configuring | Disabling http cookie auth
-  replace:
-    path: /etc/apache2/sites-enabled/default-ssl.conf
-    regexp: '.*Include /usr/share/thruk/thruk_cookie_auth.include'
-    replace: '    #Include /usr/share/thruk/thruk_cookie_auth.include'
-  when: apache2_default_ssl.stat.exists
-  notify:
-    - Handler | Restart Apache2
 
 - name: Thruk | Configuring | Give user {{ cmk_default_user }} authorized_for_admin permissions
   replace:

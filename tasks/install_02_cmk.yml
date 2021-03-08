@@ -1,11 +1,13 @@
 ---
 
-- name: Checkmk | Installing
-  apt:
-    deb: "{{ cmk_url }}"
-    state: present
-  notify:
-    - Handler | Restart Apache2
+- block:
+    - name: Checkmk | Installing
+      apt:
+        deb: "{{ cmk_url }}"
+        state: present
+      notify:
+        - Handler | Restart Apache2
+  when: ansible_os_family == "Debian"
 
 - name: Checkmk | Configuring | Getting installed Checkmk sites
   command: "omd sites -b"
