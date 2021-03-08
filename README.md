@@ -40,6 +40,8 @@ All variables are defined in defaults/main.yml.
 
 ## Example Playbook
 
+Do not run this role on an already configured monitoring system without knowing what you are doing!
+
     ---
     - hosts: checkmk_server
       roles:
