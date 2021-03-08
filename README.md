@@ -36,7 +36,7 @@ I assume you have a process in place to configure apache2 with a valid TLS confi
 
 ## Role Variables
 
-All variables are defined in defaults/main.yml.
+All variables are defined in [defaults/main.yml](defaults/main.yml).
 
 ## Example Playbook
 
@@ -73,7 +73,7 @@ Provisioning file for the nagflux database.
 
 ## Authentication
 
-This role enables authentication for Grafana through Thruk. The users can be managed in Wato as htpasswd users. By default no user, except for the user created through this role, has permission to access any information from within Thruk. To give another user permissions use the Thruk Config Tool --> "User Settings" or "CGI & Access" options. LDAP is not yet possible.
+This role enables basic authentication for Grafana and Thruk. The users can be managed in Wato as htpasswd users. By default no user, except for the user created through this role, has permission to access any information from within Thruk. To give another user permissions use the Thruk Config Tool --> "User Settings" or "CGI & Access" options. LDAP is not yet possible.
 
 ## Dataflow
 
