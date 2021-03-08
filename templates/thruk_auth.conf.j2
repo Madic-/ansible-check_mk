@@ -1,8 +1,5 @@
 # {{ ansible_managed }}
-<Location /grafana>
-    ProxyPreserveHost On
-    ProxyPass http://127.0.0.1:3000 retry=0 disablereuse=On
-    ProxyPassReverse http://127.0.0.1:3000
+<Location /thruk/>
     AuthType Basic
     AuthName AuthProxy
     AuthBasicProvider file

@@ -1,5 +1,5 @@
 ---
-# histou requires< <= php7.1...
+# histou requires php <= 7.1...Maybe someone can fix it?
 
 - name: PHP | Installing | Importing custom repository apt key
   apt_key:
