@@ -18,7 +18,8 @@ The intention of this ansible role is to replicate some of the functionality fro
 * [x] [InfluxDB](https://www.influxdata.com)
   * [x] Pre-configuring Nagflux database
 * [x] [Nagflux](https://github.com/Griesbacher/nagflux)
-* [ ] Single-Sign on for Checkmk / Thruk / Grafana (maybe [dex](https://github.com/dexidp/dex)?)
+* [x] Single-Sign on for Checkmk / Thruk / Grafana (see [Authentication](#authentication))
+  * [ ] Multisite Authorization
 
 With these tools installed Checkmk writes all performance data as pnp4nagios rrd graphs, viewable within Wato, and into an influxdb, viewable as Grafana graph template within Thruk. Of course the data within influxdb can also be used to create custom Grafana dashboards.
 
@@ -68,9 +69,9 @@ Provisioning file for the nagflux database.
     /etc/apache2/conf-enabled/grafana.conf
     /etc/apache2/conf-enabled/histou.conf
 
-## Using Checkmk Users in Thruk
+## Authentication
 
-By default no user, except for the user created through this role, has permissions to access any information from within Thruk. To give another user permissions use the Config Tool --> "User Settings" or "CGI & Access" options.
+This role enables authentication for Grafana through Thruk. The users can be managed in Wato as htpasswd users. By default no user, except for the user created through this role, has permission to access any information from within Thruk. To give another user permissions use the Thruk Config Tool --> "User Settings" or "CGI & Access" options. LDAP is not yet possible.
 
 ## Dataflow
 
