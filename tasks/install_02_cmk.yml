@@ -34,7 +34,7 @@
     state: directory
     owner: "{{ cmk_site_name }}"
     group: "{{ cmk_site_name }}"
-    mode: 0775
+    mode: 0770
   with_items:
     - /opt/omd/sites/{{ cmk_site_name }}/.ssh
     - /opt/omd/sites/{{ cmk_site_name }}/etc/ipmi-config

@@ -68,8 +68,9 @@
     group: "{{ cmk_site_name }}"
     mode: 0755
   with_items:
-    - /opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman
-    - /opt/omd/sites/{{ cmk_site_name }}/var/log/gearman
+    - /etc/mod-gearman
+    - /var/log/mod-gearman
+    - /var/run/pnp4nagios_gearman_worker
 
 - name: mod-gearman | Configuring | Templating nagios integration
   template:
@@ -79,15 +80,15 @@
     group: "{{ cmk_site_name }}"
     mode: 0644
   with_items:
-    - { src: perfdata.cfg.j2, dest: "/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/perfdata.cfg" }
-    - { src: mod-gearman_server.cfg.j2, dest: "/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/server.cfg" }
-    - { src: mod-gearman.cfg.j2, dest: "/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/mod-gearman.cfg" }
+    - { src: perfdata.cfg.j2, dest: "/etc/mod-gearman/perfdata.cfg" }
+    - { src: mod-gearman_server.cfg.j2, dest: "/etc/mod-gearman/server.cfg" }
+    - { src: mod-gearman.cfg.j2, dest: "/etc/mod-gearman/mod-gearman.cfg" }
   notify:
     - Handler | Restart Checkmk
 
 - name: mod-gearman | Configuring | mod-gearman secretfile
   copy:
-    dest: /opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/secret.key
+    dest: /etc/mod-gearman/secret.key
     owner: "{{ cmk_site_name }}"
     group: "{{ cmk_site_name }}"
     mode: 0640
@@ -102,8 +103,8 @@
     group: "{{ cmk_site_name }}"
     state: link
   with_items:
-    - { src: "/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/mod-gearman.cfg", dest: "/opt/omd/sites/{{ cmk_site_name }}/etc/nagios/nagios.d/mod-gearman.cfg" }
-    - { src: "/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/perfdata.cfg", dest: "/opt/omd/sites/{{ cmk_site_name }}/etc/nagios/nagios.d/perfdata.cfg" }
+    #- { src: "/etc/mod-gearman/mod-gearman.cfg", dest: "/opt/omd/sites/{{ cmk_site_name }}/etc/nagios/nagios.d/mod-gearman.cfg" }
+    - { src: "/etc/mod-gearman/perfdata.cfg", dest: "/opt/omd/sites/{{ cmk_site_name }}/etc/nagios/nagios.d/perfdata.cfg" }
   notify:
     - Handler | Restart Checkmk
 

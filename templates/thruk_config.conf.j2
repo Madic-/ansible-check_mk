@@ -10,5 +10,11 @@ resource_file = /omd/sites/{{ cmk_site_name }}/etc/{{ cmk_monitoring_core }}/res
             peer = /opt/omd/sites/{{ cmk_site_name }}/tmp/run/live
             #peer = 127.0.0.1:6557
         </options>
+        <configtool>
+            core_conf      = /omd/sites/{{ cmk_site_name }}/tmp/nagios/nagios.cfg
+            #obj_check_cmd  = /omd/sites/{{ cmk_site_name }}/etc/init.d/nagios check
+            #obj_reload_cmd = /omd/sites/{{ cmk_site_name }}/etc/init.d/nagios reload
+            #obj_readonly   = check_mk_objects\.cfg
+        </configtool>
     </peer>
 </Component>

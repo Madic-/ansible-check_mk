@@ -15,8 +15,8 @@
     mode: 0755
   with_items:
     - /etc/nagflux
-    - /opt/omd/sites/{{ cmk_site_name }}/var/log/nagflux
-    - /opt/omd/sites/{{ cmk_site_name }}/var/nagflux
+    - /var/log/nagflux
+    - /var/nagflux
 
 - name: Nagflux | Configuring | nagflux and nagflux systemd unit
   template:

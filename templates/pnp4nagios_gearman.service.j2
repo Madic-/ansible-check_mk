@@ -7,7 +7,7 @@ After=network-online.target
 [Service]
 User={{ cmk_site_name }}
 Group={{ cmk_site_name }}
-ExecStart=/usr/bin/perl /omd/sites/{{ cmk_site_name }}/lib/pnp4nagios/process_perfdata.pl --pidfile=/omd/sites/{{ cmk_site_name }}/tmp/pnp4nagios/run/pnp_gearman_worker.pid --config=/omd/sites/{{ cmk_site_name }}/etc/pnp4nagios/process_perfdata.cfg --gearman=127.0.0.1:4730
+ExecStart=/usr/bin/perl /omd/sites/{{ cmk_site_name }}/lib/pnp4nagios/process_perfdata.pl --pidfile=/var/run/pnp4nagios_gearman_worker/pnp_gearman_worker.pid --config=/omd/sites/{{ cmk_site_name }}/etc/pnp4nagios/process_perfdata.cfg --gearman=127.0.0.1:4730
 Restart=on-failure
 
 [Install]

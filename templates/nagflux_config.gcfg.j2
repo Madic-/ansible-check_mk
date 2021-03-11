@@ -4,8 +4,8 @@
     NagiosSpoolfileWorker = 1
     InfluxWorker = 2
     MaxInfluxWorker = 5
-    DumpFile = "/opt/omd/sites/{{ cmk_site_name }}/var/log/nagflux/nagflux.dump"
-    NagfluxSpoolfileFolder = "/opt/omd/sites/{{ cmk_site_name }}/var/nagflux"
+    DumpFile = "/var/log/nagflux/nagflux.dump"
+    NagfluxSpoolfileFolder = "/var/nagflux"
     FieldSeparator = "&"
     BufferSize = 10000
     FileBufferSize = 65536
@@ -16,11 +16,11 @@
     Address = "127.0.0.1:4730"
     Queue = "grafana_data"
     Secret = ""
-    SecretFile = "/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/secret.key"
+    SecretFile = "/etc/mod-gearman/secret.key"
     Worker = 1
 
 [Log]
-    LogFile = "/opt/omd/sites/{{ cmk_site_name }}/var/log/nagflux/nagflux.log"
+    LogFile = "/var/log/nagflux/nagflux.log"
     MinSeverity = "INFO"
 
 [InfluxDBGlobal]

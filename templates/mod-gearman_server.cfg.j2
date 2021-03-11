@@ -18,7 +18,7 @@
 debug=0
 
 # Path to the logfile.
-logfile=/opt/omd/sites/{{ cmk_site_name }}/var/log/gearman/neb.log
+logfile=/var/log/mod-gearman/neb.log
 
 # On which port is gearman listening
 server=127.0.0.1:4730
@@ -94,7 +94,7 @@ encryption=yes
 # The shared password will be read from this file.
 # Use either key or keyfile. Only the first 32
 # characters will be used.
-keyfile=/opt/omd/sites/{{ cmk_site_name }}/etc/mod-gearman/secret.key
+keyfile=/etc/mod-gearman/secret.key
 
 
 # use_uniq_jobs
