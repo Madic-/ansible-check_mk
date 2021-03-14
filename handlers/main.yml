@@ -1,7 +1,18 @@
 ---
 
+- name: Handler | systemd daemon-reload
+  systemd:
+    daemon_reload: true
+
+- name: Handler | Restart gearman-job-server
+  systemd:
+    name: gearman-job-server
+    state: restarted
+    enabled: true
+    daemon_reload: true
+
 - name: Handler | Restart Apache2
-  service:
+  systemd:
     name: apache2
     state: restarted
     enabled: true
@@ -10,19 +21,20 @@
   command: omd restart {{ cmk_site_name }}
 
 - name: Handler | Restart Grafana
-  service:
+  systemd:
     name: grafana-server
     state: restarted
     enabled: true
 
 - name: Handler | Restart Nagflux
-  service:
+  systemd:
     name: nagflux
     state: restarted
     enabled: true
+    daemon_reload: true
 
 - name: Handler | Restart Thruk
-  service:
+  systemd:
     name: thruk
     state: restarted
     enabled: true
@@ -32,15 +44,11 @@
     name: influxdb
     state: restarted
     enabled: true
+    daemon_reload: true
 
 - name: Handler | Restart pnp4nagios_gearman
   systemd:
     name: pnp4nagios_gearman
     state: restarted
     enabled: true
-
-- name: Handler | Restart gearman-job-server
-  systemd:
-    name: gearman-job-server
-    state: restarted
-    enabled: true
+    daemon_reload: true
