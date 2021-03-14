@@ -2,7 +2,7 @@
 [Unit]
 Description=pnp4nagios gearman worker
 Documentation=https://docs.pnp4nagios.org/de/pnp-0.6/
-After=network-online.target
+After=network-online.target gearman-job-server.service
 
 [Service]
 User={{ cmk_site_name }}
@@ -12,4 +12,3 @@ Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
-

@@ -2,7 +2,7 @@
 
 - block:
     # force mod-gearman-module from distribution repository
-    - name: mod-gearman | Installing | Templating apt preferences for Ubuntu
+    - name: Gearman | Installing | Templating apt preferences for Ubuntu
       blockinfile:
         path: /etc/apt/preferences
         create: yes
@@ -30,7 +30,7 @@
 #    group: naemon
 
 - block:
-    - name: mod-gearman | Installing
+    - name: Gearman | Installing
       apt:
         name:
           - gearman
@@ -46,7 +46,7 @@
   when: ansible_os_family == "Debian"
 
 # Crashes in molecule test if not 127.0.0.1
-- name: gearmand | Configuring | listen address
+- name: Gearman | Configuring | listen address
   replace:
     path: /etc/default/gearman-job-server
     regexp: "{{ item.regexp }}"
@@ -55,12 +55,13 @@
     group: www-data
     mode: 0664
     backup: yes
+  when: ansible_virtualization_type == "docker"
   with_items:
     - { regexp: 'PARAMS="--listen=localhost \\', replace: 'PARAMS="--listen=127.0.0.1 \\' }
   notify:
     - Handler | Restart gearman-job-server
 
-- name: mod-gearman | Configuring | Creating required mod-gearman directories
+- name: Gearman | Configuring | Creating required mod-gearman directories
   file:
     path: "{{ item }}"
     state: directory
@@ -72,7 +73,7 @@
     - /var/log/mod-gearman
     - /var/run/pnp4nagios_gearman_worker
 
-- name: mod-gearman | Configuring | Templating nagios integration
+- name: Gearman | Configuring | Templating nagios integration
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -86,7 +87,7 @@
   notify:
     - Handler | Restart Checkmk
 
-- name: mod-gearman | Configuring | mod-gearman secretfile
+- name: Gearman | Configuring | mod-gearman secretfile
   copy:
     dest: /etc/mod-gearman/secret.key
     owner: "{{ cmk_site_name }}"
@@ -95,7 +96,7 @@
     content: |
       {{ cmk_mod_gearman_secret }}
 
-- name: mod-gearman | Configuring | Linking mod-gearman settings into nagios.d
+- name: Gearman | Configuring | Linking mod-gearman settings into nagios.d
   file:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -103,12 +104,12 @@
     group: "{{ cmk_site_name }}"
     state: link
   with_items:
-    #- { src: "/etc/mod-gearman/mod-gearman.cfg", dest: "/opt/omd/sites/{{ cmk_site_name }}/etc/nagios/nagios.d/mod-gearman.cfg" }
+    - { src: "/etc/mod-gearman/mod-gearman.cfg", dest: "/opt/omd/sites/{{ cmk_site_name }}/etc/nagios/nagios.d/mod-gearman.cfg" }
     - { src: "/etc/mod-gearman/perfdata.cfg", dest: "/opt/omd/sites/{{ cmk_site_name }}/etc/nagios/nagios.d/perfdata.cfg" }
   notify:
     - Handler | Restart Checkmk
 
-- name: mod-gearman | Configuring | pnp4nagios gearman worker systemd unit
+- name: Gearman | Configuring | pnp4nagios gearman worker systemd unit
   template:
     src: pnp4nagios_gearman.service.j2
     dest: /etc/systemd/system/pnp4nagios_gearman.service
@@ -117,3 +118,27 @@
     mode: 0644
   notify:
     - Handler | Restart pnp4nagios_gearman
+
+- name: Gearman | Enabling encryption for pnp4nagios_gearman
+  ini_file:
+    path: "/opt/omd/sites/{{ cmk_site_name }}/etc/pnp4nagios/process_perfdata.cfg"
+    section: "{{ item.section }}"
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+    owner: "{{ cmk_site_name }}"
+    group: "{{ cmk_site_name }}"
+    mode: 0644
+    #backup: yes
+  with_items:
+    - { section: null, option: KEY_FILE, value: /etc/mod-gearman/secret.key }
+  notify:
+    - Handler | Restart pnp4nagios_gearman
+
+- name: Gearman | Start omd after gearman
+  lineinfile:
+    path: /etc/systemd/system/omd.service
+    regexp: '(After=.*)'
+    line: '\1 gearman-job-server.service'
+    backrefs: yes
+  notify:
+    - Handler | systemd daemon-reload

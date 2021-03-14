@@ -2,7 +2,7 @@
 [Unit]
 Description=A connector which transforms performancedata from Nagios/Icinga(2)/Naemon to InfluxDB/Elasticsearch
 Documentation=https://github.com/Griesbacher/nagflux
-After=network-online.target
+After=network-online.target gearman-job-server.service
 
 [Service]
 User={{ cmk_site_name }}
