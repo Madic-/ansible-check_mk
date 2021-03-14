@@ -47,9 +47,12 @@
   command: omd config {{ cmk_site_name }} set {{ item.name }} {{ item.value }}
   when: omdistro_site_facts[item.name] is defined and omdistro_site_facts[item.name] != item.value
   with_items: "{{ cmk_site_config }}"
-  #register: cmkdistro_config1
-  notify:
-    - Handler | Restart Checkmk
+  register: cmkdistro_config1
+
+- name: Checkmk | Stopping Site
+  command: omd stop {{ cmk_site_name }}
+  when: cmkdistro_config1.changed
+  tags: skip_ansible_lint
 
 - name: Checkmk | Configuring | Getting Checkmk configuration details
   omdistro_facts:
