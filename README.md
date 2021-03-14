@@ -48,6 +48,7 @@ Do not run this role on an already configured monitoring system without knowing 
         - Madic-.ansible-check_mk
       vars:
         - cmk_site_name: cmk
+        - cmk_mod_gearman_secret: YOURSECRETHERE
 
 ## Configuration Files
 
