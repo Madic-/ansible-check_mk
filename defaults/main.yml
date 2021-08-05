@@ -5,8 +5,11 @@ cmk_ansible_version: 1.0.0
 # Feature toggles
 cmk_enable_cmk: true
 cmk_enable_thruk: true
+cmk_enable_nsca: true
 cmk_enable_grafana: true
 cmk_enable_dual_graphing: true
+# This one is only required for my testing purposes, when a fully installed checkmk isn't required
+cmk_enable_quicktest: false
 
 # Checkmk variables
 cmk_version: 2.0.0p3
@@ -40,7 +43,7 @@ cmk_rpm_requirements:
   - telnet
   # libipc-run-perl
   - mtr
-  - git
+  - git-core
   #- mailutils
   - python3-setuptools
   - net-snmp-devel
@@ -119,3 +122,16 @@ cmk_nagflux_version: 0.4.1
 
 # mod-gearman
 cmk_mod_gearman_secret: YOURSECRETHERE
+
+## NSCA
+cmk_nsca_version: 9975fc7
+cmk_nsca_daemon_settings:
+  - option: password
+    value: HalloWelt
+  - option: decryption_method
+    value: 3
+cmk_nsca_client_settings:
+  - option: password
+    value: HalloWelt
+  - option: encryption_method
+    value: 3

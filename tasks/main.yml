@@ -1,5 +1,10 @@
 ---
 
+- name: Including QuickTest tasks
+  import_tasks: install_00_quick_test.yml
+  tags: quicktest,nsca,gearman
+  when: cmk_enable_quicktest
+
 - name: Including basic setup tasks
   import_tasks: install_01_basic.yml
   tags: checkmk, thruk, influxdb, grafana, gearman, basic
@@ -45,9 +50,14 @@
   tags: php
   when: (cmk_enable_dual_graphing) and (ansible_os_family == "Debian")
 
+- name: Including NSCA installation tasks
+  import_tasks: install_10_nsca.yml
+  tags: nsca
+  when: (cmk_enable_nsca) and (ansible_os_family == "Debian" or ansible_os_family == "RedHat")
+
 - name: Flush handlers
   meta: flush_handlers
-  tags: checkmk, thruk, grafana, gearman
+  tags: checkmk, thruk, grafana, gearman, nsca
 
 - name: Informational Output
   vars:

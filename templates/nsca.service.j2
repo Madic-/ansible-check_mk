@@ -1,0 +1,14 @@
+# {{ ansible_managed }}
+[Unit]
+Description=NSCA Passive Check Daemon 
+Documentation=https://github.com/NagiosEnterprises/nsca
+After=network-online.target
+
+[Service]
+User={{ cmk_site_name }}
+Group={{ cmk_site_name }}
+ExecStart=/usr/local/sbin/nsca -c /omd/sites/{{ cmk_site_name }}/etc/nsca/nsca.cfg -f
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

@@ -59,3 +59,9 @@
     state: restarted
     enabled: true
     daemon_reload: true
+
+- name: Handler | Restart NSCA
+  systemd:
+    name: nsca.service
+    state: restarted
+    enabled: true

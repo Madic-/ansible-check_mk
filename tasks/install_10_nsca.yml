@@ -1,0 +1,99 @@
+---
+
+# We need to compile NSCA because CheckMKs NSCA Daemon does not support encryption
+
+- block:
+    - name: NSCA | Debian | Installing dependencies
+      apt:
+        name:
+          - build-essential
+          - libmcrypt4
+          - libmcrypt-dev
+        state: present
+        update_cache: yes
+  when: ansible_os_family == "Debian"
+
+- block:
+    - name: NSCA | RedHat | Installing dependencies
+      dnf:
+        name:
+          - libmcrypt
+          - libmcrypt-devel
+        state: present
+        update_cache: yes
+  when: ansible_os_family == "RedHat"
+
+- name: NSCA | Cloning v{{ cmk_nsca_version }} repository
+  ansible.builtin.git:
+    repo: 'https://github.com/NagiosEnterprises/nsca.git'
+    dest: /opt/nsca-{{ cmk_nsca_version }}
+    version: "{{ cmk_nsca_version }}"
+  register: nsca_git_clone
+  check_mode: no
+
+- name: NSCA | Building
+  ansible.builtin.command:
+    cmd: "{{ item }}"
+    chdir: /opt/nsca-{{ cmk_nsca_version }}/
+    #creates: /opt/nsca-{{ cmk_nsca_version }}/src/nsca
+  when: nsca_git_clone.changed
+  check_mode: no
+  with_items:
+    - ./configure --with-nsca-user={{ cmk_site_name }} --with-nsca-grp={{ cmk_site_name }} --with-mcrypt-lib=/usr/lib64/ --with-mcrypt-inc=/usr/include
+    - make all
+
+- name: NSCA | Copying binaries
+  copy:
+    src: /opt/nsca-{{ cmk_nsca_version }}/src/{{ item }}
+    dest: /usr/local/sbin/{{ item }}
+    owner: root
+    group: root
+    mode: 0755
+    remote_src: yes
+  when: nsca_git_clone.changed
+  with_items:
+    - nsca
+    - send_nsca
+
+- name: NSCA | Configuring systemd unit
+  template:
+    src: "nsca.service.j2"
+    dest: "/etc/systemd/system/nsca.service"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Handler | systemd daemon-reload
+    - Handler | Restart NSCA
+
+- name: NSCA | Configuring Daemon
+  ini_file:
+    path: /opt/omd/sites/{{ cmk_site_name }}/etc/nsca/nsca.cfg
+    section: null
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+    owner: "{{ cmk_site_name }}"
+    group: "{{ cmk_site_name }}"
+    mode: 0644
+    no_extra_spaces: yes
+    #backup: yes
+  with_items:
+    - "{{ cmk_nsca_daemon_settings }}"
+  notify:
+    - Handler | Restart NSCA
+
+- name: NSCA | Configuring Client
+  ini_file:
+    path: /opt/omd/sites/{{ cmk_site_name }}/etc/nsca/send_nsca.cfg
+    section: null
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+    owner: "{{ cmk_site_name }}"
+    group: "{{ cmk_site_name }}"
+    mode: 0644
+    no_extra_spaces: yes
+    #backup: yes
+  with_items:
+    - "{{ cmk_nsca_client_settings }}"
+
+# firewall-cmd --add-port 5667/tcp --permanent

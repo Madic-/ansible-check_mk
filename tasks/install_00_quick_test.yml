@@ -1,0 +1,27 @@
+---
+
+- name: QuickTest | Adding group {{ cmk_site_name }}
+  ansible.builtin.group:
+    name: "{{ cmk_site_name }}"
+    state: present
+
+- name: QuickTest | Adding user {{ cmk_site_name }}
+  ansible.builtin.user:
+    name: "{{ cmk_site_name }}"
+    group: "{{ cmk_site_name }}"
+
+- name: QuickTest | Debian | Installing dependencies
+  apt:
+    name:
+      - git
+    state: present
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+
+- name: QuickTest | RedHat | Installing dependencies
+  dnf:
+    name:
+      - git-core
+    state: present
+    update_cache: yes
+  when: ansible_os_family == "RedHat"

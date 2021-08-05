@@ -7,6 +7,7 @@ The intention of this ansible role is to replicate some of the functionality fro
 * [x] [Checkmk RAW Edition](https://checkmk.com/)
   * [ ] Checkmk Master / Slave Configuration (optional)
   * [x] Dual Graphing pnp4nagios and InfluxDB/Grafana
+* [x] [NSCA Daemon](https://github.com/NagiosEnterprises/nsca)
 * [x] [Mod-Gearman](https://mod-gearman.org/)
   * [x] Gearman Job Server
 * [x] [Thruk](https://www.thruk.org)
@@ -33,7 +34,13 @@ I assume you have a process in place to configure apache2 with a valid TLS confi
 
 * Ubuntu 20.04
 * Ubuntu 18.04
-* CentOS 8 (only CheckMK, Thruk and Grafana for now. Beta Status!)
+* CentOS 8 (only CheckMK, Thruk, Grafana and NSCA for now. Beta Status!)
+
+### Pre-Requirements
+
+RedHat based:
+
+* python3-libsemanage
 
 ## Role Variables
 
@@ -76,6 +83,10 @@ Provisioning file for the nagflux database.
 ## Authentication
 
 This role enables basic authentication for Grafana and Thruk. The users can be managed in Wato as htpasswd users. By default no user, except for the user created through this role, has permission to access any information from within Thruk. To give another user permissions use the Thruk Config Tool --> "User Settings" or "CGI & Access" options. LDAP is not yet possible.
+
+## NSCA
+
+CheckMK ships with an nsca (Nagios Service Check Acceptor) daemon that does not support encryption. Because of this the role will by default compile nsca with encryption support and pre configures it with the installed CheckMK environment.
 
 ## Dataflow
 
