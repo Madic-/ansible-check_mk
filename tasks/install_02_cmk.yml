@@ -13,10 +13,10 @@
 # https://docs.checkmk.com/latest/en/install_packages_redhat.html
     - name: Checkmk | RedHat | Enabling PowerTools
       ini_file:
-        path: /etc/yum.repos.d/CentOS-PowerTools.repo
-        section: PowerTools
+        path: /etc/yum.repos.d/CentOS-Linux-PowerTools.repo
+        section: powertools
         option: enabled
-        value: 1
+        value: "1"
         owner: root
         group: root
         no_extra_spaces: true
