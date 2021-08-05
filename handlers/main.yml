@@ -44,7 +44,6 @@
     name: thruk
     state: restarted
     enabled: true
-  when: not ansible_os_family == "RedHat"
 
 - name: Handler | Restarting Influxdb
   systemd:
