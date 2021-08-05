@@ -3,22 +3,31 @@
 dependency:
   name: galaxy
 driver:
-  name: docker
+  name: vagrant
+  provider:
+    name: libvirt
+    type: libvirt
+    options:
+      memory: 384
+      cpus: 2
 lint: |
   set -e
   export ANSIBLE_ROLES_PATH=${MOLECULE_PROJECT_DIRECTORY}/.
   yamllint -c .yamllint .
   ansible-lint -c .ansible-lint playbook.yml
 platforms:
-  - name: instance
-    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2004}-ansible:latest"
-    command: ${MOLECULE_DOCKER_COMMAND:-/lib/systemd/systemd}
-    volumes:
-      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
-    privileged: true
-    pre_build_image: true
+  - name: test-ubuntu2004
+    box: generic/ubuntu2004
+  - name: test-ubuntu1804
+    box: generic/ubuntu1804
+  - name: test-centos8
+    box: generic/centos8
 provisioner:
   name: ansible
+  connection_options:
+    ansible_ssh_user: vagrant
+    ansible_become: true
+  log: true
   playbooks:
     converge: ${MOLECULE_PLAYBOOK:-converge.yml}
   config_options:
@@ -27,5 +36,6 @@ provisioner:
       callback_whitelist: profile_tasks, timer, yaml
   env:
     PY_COLORS: 1
+    ANSIBLE_COLLECTIONS_PATH: "$HOME/Git/ansible-info/collections"
 verifier:
   name: ansible
