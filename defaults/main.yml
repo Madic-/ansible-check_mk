@@ -98,16 +98,16 @@ cmk_grafana_settings:
   - { section: server, option: root_url, value: "%(protocol)s://%(domain)s:%(http_port)s/grafana/" }
   - { section: security, option: admin_user, value: "{{ cmk_default_user }}" }
   - { section: security, option: admin_password, value: "{{ cmk_default_password }}" }
-  - { section: security, option: allow_embedding, value: true }
-  - { section: security, option: disable_gravatar, value: true }
-  - { section: snapshots, option: external_enabled, value: false }
-  - { section: auth.basic, option: enabled, value: false }
-  - { section: auth.proxy, option: enabled, value: true }
-  - { section: auth.proxy, option: auto_sign_up, value: true }
-  - { section: users, option: allow_sign_up, value: false }
-  - { section: users, option: auto_assign_org, value: true }
-  - { section: analytics, option: reporting_enabled, value: false }
-  - { section: analytics, option: check_for_updates, value: false }
+  - { section: security, option: allow_embedding, value: "true" }
+  - { section: security, option: disable_gravatar, value: "true" }
+  - { section: snapshots, option: external_enabled, value: "false" }
+  - { section: auth.basic, option: enabled, value: "false" }
+  - { section: auth.proxy, option: enabled, value: "true" }
+  - { section: auth.proxy, option: auto_sign_up, value: "true" }
+  - { section: users, option: allow_sign_up, value: "false" }
+  - { section: users, option: auto_assign_org, value: "true" }
+  - { section: analytics, option: reporting_enabled, value: "false" }
+  - { section: analytics, option: check_for_updates, value: "false" }
 
 # Histou
 # https://github.com/Griesbacher/histou/releases
