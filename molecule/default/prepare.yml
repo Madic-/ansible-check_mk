@@ -3,7 +3,7 @@
 - hosts: all
 
   tasks:
-    - name: Preparing | Installing | Packages
+    - name: Preparing | Debian | Packages
       apt:
         name:
           - nano
@@ -11,3 +11,12 @@
         update_cache: yes
         state: present
       when: ansible_os_family == "Debian"
+
+    - name: Preparing | RedHat | Packages
+      yum:
+        name:
+          - nano
+          - python3-libsemanage
+        update_cache: yes
+        state: present
+      when: ansible_os_family == "RedHat"
