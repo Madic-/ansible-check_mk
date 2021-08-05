@@ -30,10 +30,9 @@
 #    group: naemon
 
 - block:
-    - name: Gearman | Installing
+    - name: Gearman | Installing mod-gearman
       apt:
         name:
-          - gearman
           - mod-gearman-module
           - mod-gearman-tools
           - libgearman-client-perl
@@ -41,11 +40,20 @@
           #- libgearman7
         state: present
         update_cache: yes
-      notify:
-        - Handler | Restart gearman-job-server
+
+    # ignore_errors: yes because start of server fails after installation on some systems.
+    # Starts successfull with the later change of the listen address to 127.0.0.1.
+    - name: Gearman | Installing
+      apt:
+        name:
+          - gearman
+        state: present
+        update_cache: yes
+      ignore_errors: yes
   when: ansible_os_family == "Debian"
 
 # Crashes in molecule test if not 127.0.0.1
+# Update 1: Always change the listen address
 - name: Gearman | Configuring | listen address
   replace:
     path: /etc/default/gearman-job-server
@@ -55,7 +63,7 @@
     group: www-data
     mode: 0664
     backup: yes
-  when: ansible_virtualization_type == "docker"
+  #when: ansible_virtualization_type == "docker"
   with_items:
     - { regexp: 'PARAMS="--listen=localhost \\', replace: 'PARAMS="--listen=127.0.0.1 \\' }
   notify:
