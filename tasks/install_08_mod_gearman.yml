@@ -11,7 +11,7 @@
         mode: 0644
         block: |
           Package: mod-gearman-module
-          Pin: origin "archive.ubuntu.com"
+          Pin: origin "*archive.ubuntu.com"
           Pin-Priority: 999
         marker: "## {mark} ANSIBLE CHECKMK MANAGED BLOCK"
   when: ansible_distribution == "Ubuntu"

@@ -1,0 +1,37 @@
+---
+
+- name: Thruk | RedHat | Installing
+  dnf:
+    name: thruk
+    state: present
+    update_cache: yes
+
+- name: Thruk | RedHat | Apache2 authentication config
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: apache
+    group: apache
+    mode: 0644
+  with_items:
+    - { src: thruk_auth.conf.j2, dest: /etc/httpd/conf.d/thruk_auth.conf }
+  notify:
+    - Handler | Restart httpd
+
+- name: Thruk | RedHat | Removing cookie auth config file
+  file:
+    path: /etc/httpd/conf.d/thruk_cookie_auth_vhost.conf
+    state: absent
+  notify:
+    - Handler | Restart httpd
+
+- name: Thruk | Configuring
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: apache
+    group: apache
+    mode: 0644
+  with_items:
+    - { src: thruk_config.conf.j2, dest: /etc/thruk/thruk_local.d/thruk_ansible.conf }
+    - { src: thruk_menu.conf.j2, dest: /etc/thruk/menu_local.conf }

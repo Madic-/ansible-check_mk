@@ -17,6 +17,12 @@
     state: restarted
     enabled: true
 
+- name: Handler | Restart httpd
+  systemd:
+    name: httpd
+    state: restarted
+    enabled: true
+
 - name: Handler | Restart Checkmk
   command: omd restart {{ cmk_site_name }}
 
@@ -38,6 +44,7 @@
     name: thruk
     state: restarted
     enabled: true
+  when: not ansible_os_family == "RedHat"
 
 - name: Handler | Restarting Influxdb
   systemd:

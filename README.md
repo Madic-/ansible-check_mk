@@ -33,6 +33,7 @@ I assume you have a process in place to configure apache2 with a valid TLS confi
 
 * Ubuntu 20.04
 * Ubuntu 18.04
+* CentOS 8 (only CheckMK, Thruk and Grafana for now. Beta Status!)
 
 ## Role Variables
 

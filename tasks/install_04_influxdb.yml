@@ -1,25 +1,37 @@
 ---
 
 - block:
-    - name: InfluxDB | Installing | Adding apt key for influxdb repo
+    - name: InfluxDB | Debian | Adding gpg key for influxdb repo
       apt_key:
         url: https://repos.influxdata.com/influxdb.key
         state: present
 
-    - name: InfluxDB | Installing | Adding InfluxDB repository
+    - name: InfluxDB | Debian | Adding InfluxDB repository
       apt_repository:
         filename: influxdata_stable
         repo: "deb http://repos.influxdata.com/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable"
         update_cache: yes
         state: present
 
-    - name: InfluxDB | Installing
+    - name: InfluxDB | Debian | Installing
       apt:
         name:
           - influxdb
         state: present
       notify:
         - Handler | Restarting Influxdb
+
+    # Workaround for https://community.influxdata.com/t/influxdb-1-8-7-will-not-start/20965
+    - name: InfluxDB | Check existence of startscript
+      stat:
+        path: /usr/lib/influxdb/scripts/influxd-systemd-start.sh
+      register: influxdb_startscript
+
+    - name: InfluxDB | Workaround for startscript
+      file:
+        dest: /usr/lib/influxdb/scripts/influxd-systemd-start.sh
+        mode: a+x
+      when: influxdb_startscript.stat.exists
   when: ansible_os_family == "Debian"
 
 - name: InfluxDB | Configuring | Modifing InfluxDB hostname

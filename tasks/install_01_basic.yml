@@ -1,7 +1,7 @@
 ---
 
 - block:
-    - name: Basic | Installing | Ubuntu Packages
+    - name: Basic | Ubuntu | Installing Packages
       apt:
         name: "{{ cmk_apt_requirements_ubuntu }}"
         state: present
@@ -9,24 +9,43 @@
   when: ansible_distribution == "Ubuntu"
 
 - block:
-    - name: Basic | Installing | Packages
+    - name: Basic | Debian | Installing Packages
       apt:
         name: "{{ cmk_apt_requirements }}"
         state: present
         update_cache: yes
 
-    - name: Basic | Installing | Importing consol labs apt key
+    - name: Basic | Debian | Importing consol labs gpg key
       apt_key:
         url: https://labs.consol.de/repo/stable/RPM-GPG-KEY
         state: present
 
-    - name: Basic | Installing | Adding consol labs stable repo
+    - name: Basic | Debian | Adding consol labs stable repo
       apt_repository:
         filename: labs_consol_stable
         repo: "deb http://labs.consol.de/repo/stable/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} main"
         update_cache: no
         state: present
   when: ansible_os_family == "Debian"
+
+- block:
+    - name: Basic | RedHat | Installing Packages
+      dnf:
+        name: "{{ cmk_rpm_requirements }}"
+        state: present
+        update_cache: yes
+
+    - name: Basic | RedHat | Importing consol labs gpg key
+      ansible.builtin.rpm_key:
+        state: present
+        key: https://labs.consol.de/repo/stable/RPM-GPG-KEY
+
+    - name: Basic | RedHat | Adding consol labs stable repo
+      dnf:
+        name: https://labs.consol.de/repo/stable/rhel8/i386/labs-consol-stable.rhel8.noarch.rpm
+        state: present
+        update_cache: yes
+  when: ansible_os_family == "RedHat"
 
 - name: Basic | Installing | Python dependencies
   pip:

@@ -1,18 +1,59 @@
 ---
 
 - block:
-    - name: Checkmk | Installing
+    - name: Checkmk | Debian | Installing package
       apt:
-        deb: "{{ cmk_url }}"
+        deb: "{{ cmk_debian_url }}"
         state: present
       notify:
         - Handler | Restart Apache2
   when: ansible_os_family == "Debian"
 
+- block:
+# https://docs.checkmk.com/latest/en/install_packages_redhat.html
+    - name: Checkmk | RedHat | Enabling PowerTools
+      ini_file:
+        path: /etc/yum.repos.d/CentOS-PowerTools.repo
+        section: PowerTools
+        option: enabled
+        value: 1
+        owner: root
+        group: root
+        no_extra_spaces: true
+        mode: 0644
+
+    - name: Checkmk | RedHat | Enabling httpd_can_network_connect flag and persist across reboots
+      ansible.posix.seboolean:
+        name: httpd_can_network_connect
+        state: yes
+        persistent: yes
+      when: ansible_selinux.status == "enabled" and ansible_distribution == "CentOS"
+
+    - name: Checkmk | RedHat | Adding services http / https to firewalld zone public
+      ansible.posix.firewalld:
+        zone: public
+        permanent: yes
+        immediate: yes
+        state: enabled
+        service: "{{ item }}"
+      with_items:
+        - http
+        - https
+
+    - name: Checkmk | RedHat | Installing package
+      dnf:
+        name: "{{ cmk_redhat_url }}"
+        state: present
+        disable_gpg_check: true
+      notify:
+        - Handler | Restart httpd
+  when: ansible_os_family == "RedHat"
+
 - name: Checkmk | Configuring | Getting installed Checkmk sites
   command: "omd sites -b"
   register: cmk_sites
   changed_when: false
+  check_mode: no
 
 - name: Checkmk | Configuring | Creating Checkmk site {{ cmk_site_name }}
   command: "omd create {{ cmk_site_name }}"
@@ -27,6 +68,7 @@
     owner: "{{ cmk_site_name }}"
     group: "{{ cmk_site_name }}"
     mode: 0640
+  when: not ansible_check_mode
 
 - name: Checkmk | Configuring | Creating required directories for user {{ cmk_site_name }}
   file:
@@ -38,6 +80,7 @@
   with_items:
     - /opt/omd/sites/{{ cmk_site_name }}/.ssh
     - /opt/omd/sites/{{ cmk_site_name }}/etc/ipmi-config
+  when: not ansible_check_mode
 
 - name: Checkmk | Configuring | Getting Checkmk configuration details
   omdistro_facts:
@@ -48,6 +91,8 @@
   when: omdistro_site_facts[item.name] is defined and omdistro_site_facts[item.name] != item.value
   with_items: "{{ cmk_site_config }}"
   register: cmkdistro_config1
+  notify:
+    - Handler | Restart Checkmk
 
 - name: Checkmk | Stopping Site
   command: omd stop {{ cmk_site_name }}
@@ -75,3 +120,4 @@
   with_items:
     - { regexp: ".*\\/{{ cmk_site_name }}\\/pnp4nagios\\/index\\.php\\/graph\\?host=\\$HOSTNAME\\$&srv=_HOST_.*", replace: "  action_url                      /grafana/dashboard/script/histou.js?host=$HOSTNAME$&theme=light&annotations=true" }
     - { regexp: ".*\\/{{ cmk_site_name }}\\/pnp4nagios\\/index\\.php\\/graph\\?host=\\$HOSTNAME\\$&srv=\\$SERVICEDESC\\$.*", replace: "  action_url                      /grafana/dashboard/script/histou.js?host=$HOSTNAME$&service=$SERVICEDESC$&theme=light&annotations=true" }
+  when: cmk_enable_dual_graphing

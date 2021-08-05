@@ -1,27 +1,81 @@
 ---
 
 - block:
-    - name: Grafana | Installing | Importing Grafana key for the grafana debian repository
+    - name: Grafana | Debian | Importing Grafana key for the grafana debian repository
       apt_key:
         url: "https://packages.grafana.com/gpg.key"
 
-    - name: Grafana | Installing | Adding Grafana repository
+    - name: Grafana | Debian | Adding Grafana repository
       apt_repository:
         filename: grafana_stable
         repo: "deb http://packages.grafana.com/oss/deb stable main"
         update_cache: no
         state: present
 
-    - name: Grafana | Installing
+    - name: Grafana | Debian | Installing
       apt:
         name: grafana
         state: present
         update_cache: yes
       notify:
         - Handler | Restart Grafana
+
+    - name: Grafana | Debian | Configuring apache2 for grafana
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0644
+      with_items:
+        - { src: grafana_apache2.conf.j2, dest: /etc/apache2/conf-available/grafana.conf }
+      notify:
+        - Handler | Restart Apache2
+
+    - name: Grafana | Debian | Symlinking grafana apache2 configuration
+      file:
+        src: /etc/apache2/conf-available/grafana.conf
+        dest: /etc/apache2/conf-enabled/grafana.conf
+        force: yes
+        owner: root
+        group: root
+        state: link
+      notify:
+        - Handler | Restart Apache2
   when: ansible_os_family == "Debian"
 
-- name: Grafana | Replace Unicode character for ini_file module
+- block:
+    - name: Grafana | RedHat | Importing grafana gpg key
+      ansible.builtin.rpm_key:
+        state: present
+        key: https://packages.grafana.com/gpg.key
+
+    - name: Grafana | RedHat | Adding grafana oss repo
+      blockinfile:
+        dest: /etc/yum.repos.d/grafana.repo
+        block: |
+          [grafana]
+          name=grafana
+          baseurl=https://packages.grafana.com/oss/rpm
+          repo_gpgcheck=1
+          enabled=1
+          gpgcheck=1
+          gpgkey=https://packages.grafana.com/gpg.key
+          sslverify=1
+          sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+        create: true
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Grafana | RedHat | Installing
+      dnf:
+        name: grafana
+        state: present
+        update_cache: yes
+  when: ansible_os_family == "RedHat"
+
+- name: Grafana | Replacing Unicode character for ini_file module
   replace:
     path: /etc/grafana/grafana.ini
     regexp: '’'
@@ -37,46 +91,9 @@
     group: grafana
     mode: 0640
     #backup: yes
-  with_items:
-    - { section: server, option: http_addr, value: 127.0.0.1 }
-    - { section: server, option: root_url, value: "%(protocol)s://%(domain)s:%(http_port)s/grafana/" }
-    - { section: security, option: admin_user, value: "{{ cmk_default_user }}" }
-    - { section: security, option: admin_password, value: "{{ cmk_default_password }}" }
-    - { section: security, option: allow_embedding, value: true }
-    - { section: security, option: disable_gravatar, value: true }
-    - { section: snapshots, option: external_enabled, value: false }
-    - { section: auth.basic, option: enabled, value: false }
-    - { section: auth.proxy, option: enabled, value: true }
-    - { section: auth.proxy, option: auto_sign_up, value: true }
-    - { section: users, option: allow_sign_up, value: false }
-    - { section: users, option: auto_assign_org, value: true }
-    - { section: analytics, option: reporting_enabled, value: false }
-    - { section: analytics, option: check_for_updates, value: false }
+  with_items: "{{ cmk_grafana_settings }}"
   notify:
     - Handler | Restart Grafana
-
-- name: Grafana | Configuring | apache2 for grafana
-  template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    owner: root
-    group: root
-    mode: 0644
-  with_items:
-    - { src: grafana_apache2.conf.j2, dest: /etc/apache2/conf-available/grafana.conf }
-  notify:
-    - Handler | Restart Apache2
-
-- name: Grafana | Configuring | Symlinking grafana apache2 configuration
-  file:
-    src: /etc/apache2/conf-available/grafana.conf
-    dest: /etc/apache2/conf-enabled/grafana.conf
-    force: yes
-    owner: root
-    group: root
-    state: link
-  notify:
-    - Handler | Restart Apache2
 
 - name: Grafana | Configuring | Creating the grafana provisioning folder
   file:
@@ -85,6 +102,7 @@
     owner: root
     group: root
     mode: 0755
+  when: cmk_enable_dual_graphing
 
 - name: Grafana | Configuring | Provisioning database nagflux
   template:
@@ -97,3 +115,4 @@
     - { src: grafana_datasource.yml.j2, dest: /etc/grafana/provisioning/datasources/influxdb-nagflux.yml }
   notify:
     - Handler | Restart Grafana
+  when: cmk_enable_dual_graphing

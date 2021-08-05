@@ -2,8 +2,14 @@
 
 cmk_ansible_version: 1.0.0
 
+# Feature toggles
+cmk_enable_cmk: true
+cmk_enable_thruk: true
+cmk_enable_grafana: true
+cmk_enable_dual_graphing: true
+
 # Checkmk variables
-cmk_version: 2.0.0
+cmk_version: 2.0.0p3
 cmk_site_name: cmk
 cmk_apt_requirements:
   - apt-transport-https
@@ -20,13 +26,29 @@ cmk_apt_requirements:
   - python3-setuptools
   - python3-pip
   - libsnmp-dev
+  - python3-requests
 cmk_apt_requirements_ubuntu:
   - snmpd
   - python3-pip
   - python3-passlib
+cmk_rpm_requirements:
+  - epel-release
+  - python3-pip
+  - python3-passlib
+  - net-snmp
+  - freeipmi
+  - telnet
+  # libipc-run-perl
+  - mtr
+  - git
+  #- mailutils
+  - python3-setuptools
+  - net-snmp-devel
+  - gnupg2
+  - python3-requests
+  - python36-devel
 cmk_python_requirements:
   - influxdb
-  - requests
   - python3-netsnmp
 cmk_default_user: cmkadmin
 cmk_default_password: cmk
@@ -52,11 +74,12 @@ cmk_site_config:
   - { name: LIVESTATUS_TCP_PORT,      value: "6557" }
   - { name: LIVESTATUS_TCP_TLS,       value: "off" }
   - { name: NSCA,                     value: "off" }
-cmk_url: "https://download.checkmk.com/checkmk/{{ cmk_version }}/check-mk-raw-{{ cmk_version }}_0.{{ ansible_distribution_release }}_amd64.deb"
+cmk_debian_url: "https://download.checkmk.com/checkmk/{{ cmk_version }}/check-mk-raw-{{ cmk_version }}_0.{{ ansible_distribution_release }}_amd64.deb"
+cmk_redhat_url: "https://download.checkmk.com/checkmk/{{ cmk_version }}/check-mk-raw-{{ cmk_version }}-el8-38.x86_64.rpm"
 
 cmk_domain: "http://{{ ansible_nodename }}"
 
-# Thruk variables
+# Thruk
 cmk_thruk_menu: |
   do '/usr/share/thruk/menu.conf';
   add_link('name' => 'Wato', 'href' => '/{{ cmk_site_name }}/', target => '_blank');
@@ -70,6 +93,21 @@ cmk_influx_bind_address: 127.0.0.1:8086
 
 # Grafana
 cmk_grafana_datasource_name: influxdb-{{ cmk_influxdb_nagflux_name }}
+cmk_grafana_settings:
+  - { section: server, option: http_addr, value: 127.0.0.1 }
+  - { section: server, option: root_url, value: "%(protocol)s://%(domain)s:%(http_port)s/grafana/" }
+  - { section: security, option: admin_user, value: "{{ cmk_default_user }}" }
+  - { section: security, option: admin_password, value: "{{ cmk_default_password }}" }
+  - { section: security, option: allow_embedding, value: true }
+  - { section: security, option: disable_gravatar, value: true }
+  - { section: snapshots, option: external_enabled, value: false }
+  - { section: auth.basic, option: enabled, value: false }
+  - { section: auth.proxy, option: enabled, value: true }
+  - { section: auth.proxy, option: auto_sign_up, value: true }
+  - { section: users, option: allow_sign_up, value: false }
+  - { section: users, option: auto_assign_org, value: true }
+  - { section: analytics, option: reporting_enabled, value: false }
+  - { section: analytics, option: check_for_updates, value: false }
 
 # Histou
 # https://github.com/Griesbacher/histou/releases

@@ -2,51 +2,61 @@
 
 - name: Including basic setup tasks
   import_tasks: install_01_basic.yml
-  tags: checkmk, thruk, influxdb, grafana, gearman
+  tags: checkmk, thruk, influxdb, grafana, gearman, basic
+  when: cmk_enable_cmk or cmk_enable_thruk or cmk_enable_dual_graphing
 
 - name: Including Checkmk tasks
   import_tasks: install_02_cmk.yml
   tags: checkmk
+  when: cmk_enable_cmk
 
 - name: Including Thruk installation tasks
   import_tasks: install_03_thruk.yml
   tags: thruk
+  when: cmk_enable_thruk or cmk_enable_dual_graphing
 
 - name: Including InfluxDB installation tasks
   import_tasks: install_04_influxdb.yml
   tags: influxdb
+  when: cmk_enable_dual_graphing
 
 - name: Including Grafana installation tasks
   import_tasks: install_05_grafana.yml
   tags: grafana
+  when: cmk_enable_grafana or cmk_enable_dual_graphing
 
 - name: Including Histou installation tasks
   import_tasks: install_06_histou.yml
   tags: histou
+  when: cmk_enable_dual_graphing
 
 - name: Including Nagflux installation tasks
   import_tasks: install_07_nagflux.yml
   tags: nagflux
+  when: cmk_enable_dual_graphing
 
 - name: Including mod_gearman installation tasks
   import_tasks: install_08_mod_gearman.yml
   tags: gearman
+  when: cmk_enable_dual_graphing
 
 - name: Including php installation tasks
   import_tasks: install_09_php.yml
   tags: php
+  when: cmk_enable_dual_graphing
 
 - name: Flush handlers
   meta: flush_handlers
   tags: checkmk, thruk, grafana, gearman
 
 - name: Informational Output
+  vars:
+    cmk_info: |
+      Checkmk URL: http://{{ inventory_hostname }}/{{ cmk_site_name }}/check_mk
+      Thruk URL: http://{{ inventory_hostname }}/thruk
+      Grafana URL: http://{{ inventory_hostname }}/grafana
+      Default user: {{ cmk_default_user }}
+      Default password: {{ cmk_default_password }}
   debug:
-    msg:
-      - ""
-      - "Checkmk URL: http://{{ inventory_hostname }}/{{ cmk_site_name }}/check_mk"
-      - "Thruk URL: http://{{ inventory_hostname }}/thruk"
-      - "Grafana URL: http://{{ inventory_hostname }}/grafana"
-      - "Default user: {{ cmk_default_user }}"
-      - "Default password: {{ cmk_default_password }}"
+    msg: "{{ cmk_info.split('\n') }}"
   tags: checkmk, thruk, grafana
