@@ -3,47 +3,47 @@
 - name: Including basic setup tasks
   import_tasks: install_01_basic.yml
   tags: checkmk, thruk, influxdb, grafana, gearman, basic
-  when: cmk_enable_cmk or cmk_enable_thruk or cmk_enable_dual_graphing
+  when: (cmk_enable_cmk or cmk_enable_dual_graphing or cmk_enable_thruk) and (ansible_os_family == "Debian" or ansible_os_family == "RedHat")
 
 - name: Including Checkmk tasks
   import_tasks: install_02_cmk.yml
   tags: checkmk
-  when: cmk_enable_cmk
+  when: (cmk_enable_cmk) and (ansible_os_family == "Debian" or ansible_os_family == "RedHat")
 
 - name: Including Thruk installation tasks
   import_tasks: install_03_thruk.yml
   tags: thruk
-  when: cmk_enable_thruk or cmk_enable_dual_graphing
+  when: (cmk_enable_thruk or cmk_enable_dual_graphing) and (ansible_os_family == "Debian" or ansible_os_family == "RedHat")
 
 - name: Including InfluxDB installation tasks
   import_tasks: install_04_influxdb.yml
   tags: influxdb
-  when: cmk_enable_dual_graphing
+  when: (cmk_enable_dual_graphing) and (ansible_os_family == "Debian")
 
 - name: Including Grafana installation tasks
   import_tasks: install_05_grafana.yml
   tags: grafana
-  when: cmk_enable_grafana or cmk_enable_dual_graphing
+  when: (cmk_enable_grafana or cmk_enable_dual_graphing) and (ansible_os_family == "Debian" or ansible_os_family == "RedHat")
 
 - name: Including Histou installation tasks
   import_tasks: install_06_histou.yml
   tags: histou
-  when: cmk_enable_dual_graphing
+  when: (cmk_enable_dual_graphing) and (ansible_os_family == "Debian")
 
 - name: Including Nagflux installation tasks
   import_tasks: install_07_nagflux.yml
   tags: nagflux
-  when: cmk_enable_dual_graphing
+  when: (cmk_enable_dual_graphing) and (ansible_os_family == "Debian")
 
 - name: Including mod_gearman installation tasks
   import_tasks: install_08_mod_gearman.yml
   tags: gearman
-  when: cmk_enable_dual_graphing
+  when: (cmk_enable_dual_graphing) and (ansible_os_family == "Debian")
 
 - name: Including php installation tasks
   import_tasks: install_09_php.yml
   tags: php
-  when: cmk_enable_dual_graphing
+  when: (cmk_enable_dual_graphing) and (ansible_os_family == "Debian")
 
 - name: Flush handlers
   meta: flush_handlers
